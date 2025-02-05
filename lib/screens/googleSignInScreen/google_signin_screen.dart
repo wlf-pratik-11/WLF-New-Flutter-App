@@ -1,10 +1,9 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:wlf_new_flutter_app/commons/common_functions.dart';
 import 'package:wlf_new_flutter_app/commons/my_colors.dart';
+import 'package:wlf_new_flutter_app/commons/string_values.dart';
 
-import '../mainScreen/main_screen.dart';
 import 'google_signin_screen_bloc.dart';
 
 class GoogleSigninScreen extends StatefulWidget {
@@ -32,10 +31,10 @@ class _GoogleSigninScreenState extends State<GoogleSigninScreen> {
               text: TextSpan(
                 children: [
                   TextSpan(
-                      text: "Welcome to our\n",
+                      text: "${StringValues.welcomeToOur}\n",
                       style: GoogleFonts.nunito(fontSize: screenSizeRatio * 0.035, color: MyColors.mainColor)),
                   TextSpan(
-                      text: "WLF New Flutter App",
+                      text: StringValues.wlfNewFlutterApp,
                       style: GoogleFonts.nunito(
                           fontSize: screenSizeRatio * 0.045, color: MyColors.mainColor, fontWeight: FontWeight.bold))
                 ],
@@ -60,7 +59,7 @@ class _GoogleSigninScreenState extends State<GoogleSigninScreen> {
             padding: EdgeInsets.symmetric(horizontal: screenSizeRatio * 0.02),
             child: ElevatedButton.icon(
               label: Text(
-                "Sign in with Google",
+                StringValues.signInWithGoogle,
                 style: TextStyle(color: MyColors.buttonFontColor, fontWeight: FontWeight.bold, fontSize: screenSizeRatio * 0.035),
               ),
               icon: Image(
@@ -68,14 +67,7 @@ class _GoogleSigninScreenState extends State<GoogleSigninScreen> {
                 height: screenSizeRatio * 0.06,
               ),
               onPressed: () async {
-                UserCredential? cred = await _bloc.signInWithGoolgle();
-                if (cred != null) {
-                  Navigator.pushReplacement(context, MaterialPageRoute(
-                    builder: (context) {
-                      return MainScreen();
-                    },
-                  ));
-                }
+                await _bloc.signInWithGoolgle(context);
               },
               style: ElevatedButton.styleFrom(
                   backgroundColor: MyColors.mainColor,

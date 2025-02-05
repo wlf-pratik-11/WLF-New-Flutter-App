@@ -1,12 +1,13 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:wlf_new_flutter_app/commons/common_functions.dart';
 import 'package:wlf_new_flutter_app/commons/my_colors.dart';
-import 'package:wlf_new_flutter_app/screens/googleSignInScreen/google_signin_screen.dart';
+import 'package:wlf_new_flutter_app/commons/string_values.dart';
+import 'package:wlf_new_flutter_app/screens/paginationScreen/pagination_screen.dart';
 
 import '../../commons/DrawerDl.dart';
-import '../googleSignInScreen/google_signin_screen_bloc.dart';
+import '../selectImageFronCameraAndGallery/pick_image_camera_gallery.dart';
 import '../tabBarScreen/tabbar_screen.dart';
+import 'main_screen_bloc.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
@@ -17,17 +18,24 @@ class MainScreen extends StatefulWidget {
 
 class _MainScreenState extends State<MainScreen> {
   List<DrawerDl> lst = [
-    DrawerDl(MainScreen(), "Main Screen Demo"),
-    DrawerDl(TabbarScreen(), "Tab bar Demo"),
-    DrawerDl(MainScreen(), "Main Screen Demo"),
-    DrawerDl(MainScreen(), "Main Screen Demo"),
+    DrawerDl(TabbarScreen(), StringValues.tabBarDemo),
+    DrawerDl(PickImageCameraGallery(), StringValues.pickImageFromCameraAndGalleryDemo),
+    DrawerDl(PaginationScreen(), StringValues.paginationDemo),
   ];
-  GoogleSigninScreenBloc _bloc = GoogleSigninScreenBloc();
-  final _user = FirebaseAuth.instance.currentUser;
+  MainScreenBloc _bloc = MainScreenBloc();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: commonAppbar("Main Screen", centerTitle: true),
+      appBar: commonAppbar(StringValues.mainScreen, centerTitle: true, actions: [
+        IconButton(
+          onPressed: () {
+            _bloc.signOut(context);
+          },
+          icon: Icon(Icons.logout),
+          padding: EdgeInsets.all(screenSizeRatio * 0.02),
+        )
+      ]),
       drawer: Drawer(
         backgroundColor: Colors.white,
         child: Column(
@@ -46,21 +54,21 @@ class _MainScreenState extends State<MainScreen> {
                       borderRadius: BorderRadiusDirectional.circular(100),
                       child: Image(
                           height: screenSizeRatio * 0.09,
-                          image: NetworkImage(_user != null
-                              ? _user.photoURL.toString()
+                          image: NetworkImage(_bloc.user != null
+                              ? _bloc.user!.photoURL.toString()
                               : "https://img.freepik.com/premium-photo/happy-man-ai-generated-portrait-user-profile_1119669-1.jpg")),
                     ),
                   ),
                   Padding(
                     padding: EdgeInsets.symmetric(horizontal: screenSizeRatio * 0.01),
                     child: Text(
-                      _user != null ? _user.displayName.toString() : "Pratik Tank",
+                      _bloc.user != null ? _bloc.user!.displayName.toString() : "Pratik Tank",
                       style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
                     ),
                   ),
                   Padding(
                     padding: EdgeInsets.symmetric(vertical: screenSizeRatio * 0.01, horizontal: screenSizeRatio * 0.01),
-                    child: Text(_user != null ? _user.email.toString() : "tankpratik112@gmail.com",
+                    child: Text(_bloc.user != null ? _bloc.user!.email.toString() : "tankpratik112@gmail.com",
                         style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
                   )
                 ],
@@ -99,21 +107,11 @@ class _MainScreenState extends State<MainScreen> {
         ),
       ),
       body: Container(
-        color: Colors.yellow,
         child: Center(
-          child: TextButton(
-              onPressed: () async {
-                if (await _bloc.signOut()) {
-                  Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => GoogleSigninScreen(),
-                      ));
-                } else {
-                  print("Failed to log out");
-                }
-              },
-              child: Text("Sign Out")),
+          child: Text(
+            StringValues.welcomeToOurApp,
+            style: TextStyle(fontSize: screenSizeRatio * 0.04, fontWeight: FontWeight.bold),
+          ),
         ),
       ),
     );

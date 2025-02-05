@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:wlf_new_flutter_app/commons/common_functions.dart';
+import 'package:wlf_new_flutter_app/commons/string_values.dart';
 
 import '../../commons/my_colors.dart';
 
@@ -20,7 +21,7 @@ class _TabbarScreenState extends State<TabbarScreen> {
           iconTheme: IconThemeData(color: Colors.white),
           backgroundColor: MyColors.mainColor,
           title: Text(
-            "Tab Bar Demo",
+            StringValues.tabBarDemo,
             style: TextStyle(fontSize: screenSizeRatio * 0.036, fontWeight: FontWeight.bold, color: Colors.white),
           ),
           bottom: TabBar(
@@ -31,7 +32,7 @@ class _TabbarScreenState extends State<TabbarScreen> {
                   color: Colors.white,
                 ),
                 child: Text(
-                  "Tab 1",
+                  StringValues.tab1,
                   style: TextStyle(color: Colors.white),
                 ),
               ),
@@ -41,7 +42,7 @@ class _TabbarScreenState extends State<TabbarScreen> {
                   color: Colors.white,
                 ),
                 child: Text(
-                  "Tab 2",
+                  StringValues.tab2,
                   style: TextStyle(color: Colors.white),
                 ),
               ),
@@ -51,7 +52,7 @@ class _TabbarScreenState extends State<TabbarScreen> {
                   color: Colors.white,
                 ),
                 child: Text(
-                  "Tab 3",
+                  StringValues.tab3,
                   style: TextStyle(color: Colors.white),
                 ),
               ),
@@ -59,7 +60,50 @@ class _TabbarScreenState extends State<TabbarScreen> {
           ),
         ),
         body: TabBarView(children: [
-          Icon(Icons.account_balance),
+          Center(
+            child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadiusDirectional.circular(10)),
+                  backgroundColor: MyColors.mainColor,
+                ),
+                onPressed: () {
+                  showModalBottomSheet(
+                    context: context,
+                    builder: (context) {
+                      return Container(
+                        width: double.maxFinite,
+                        height: screenSizeRatio * 0.2,
+                        color: MyColors.mainColor,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            Padding(
+                              padding: EdgeInsets.only(top: screenSizeRatio * 0.03),
+                              child: Text(
+                                StringValues.bottomSheetDemo,
+                                style: TextStyle(fontSize: screenSizeRatio * 0.03, color: Colors.white),
+                              ),
+                            ),
+                            TextButton(
+                                onPressed: () => Navigator.pop(context),
+                                child: Text(
+                                  StringValues.confirm,
+                                  style: TextStyle(color: MyColors.buttonFontColor, fontSize: diologeButtonFontSize),
+                                ))
+                          ],
+                        ),
+                      );
+                    },
+                  );
+                },
+                child: Padding(
+                  padding: EdgeInsets.all(screenSizeRatio * 0.02),
+                  child: Text(
+                    StringValues.showBottomSheet,
+                    style: TextStyle(color: MyColors.buttonFontColor, fontSize: screenSizeRatio * 0.03),
+                  ),
+                )),
+          ),
           Icon(Icons.local_fire_department_outlined),
           Icon(Icons.account_circle_outlined),
         ]),
