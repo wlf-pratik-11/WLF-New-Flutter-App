@@ -31,6 +31,14 @@ class StringValues {
   //Pagination Screen
 
   static String paginationScreen = "Pagination Screen";
+  static String name = "Name";
+  static String gender = "Gender";
+  static String status = "Status";
+  static String location = "Location";
+  static String species = "Species";
+  static String origin = "Origin";
+  static String created = "Created";
+  static String tapToShowMore = "Show More";
 
   //Pick Image From Camera and Gallery
 

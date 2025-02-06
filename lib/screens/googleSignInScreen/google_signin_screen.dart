@@ -6,15 +6,15 @@ import 'package:wlf_new_flutter_app/commons/string_values.dart';
 
 import 'google_signin_screen_bloc.dart';
 
-class GoogleSigninScreen extends StatefulWidget {
-  const GoogleSigninScreen({super.key});
+class GoogleSignInScreen extends StatefulWidget {
+  const GoogleSignInScreen({super.key});
 
   @override
-  State<GoogleSigninScreen> createState() => _GoogleSigninScreenState();
+  State<GoogleSignInScreen> createState() => _GoogleSignInScreenState();
 }
 
-class _GoogleSigninScreenState extends State<GoogleSigninScreen> {
-  GoogleSigninScreenBloc _bloc = GoogleSigninScreenBloc();
+class _GoogleSignInScreenState extends State<GoogleSignInScreen> {
+  final GoogleSigninScreenBloc _bloc = GoogleSigninScreenBloc();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -25,20 +25,18 @@ class _GoogleSigninScreenState extends State<GoogleSigninScreen> {
           SizedBox(height: screenSizeRatio * 0.2),
 
           //Title of Screen
-          Center(
-            child: RichText(
-              textAlign: TextAlign.center,
-              text: TextSpan(
-                children: [
-                  TextSpan(
-                      text: "${StringValues.welcomeToOur}\n",
-                      style: GoogleFonts.nunito(fontSize: screenSizeRatio * 0.035, color: MyColors.mainColor)),
-                  TextSpan(
-                      text: StringValues.wlfNewFlutterApp,
-                      style: GoogleFonts.nunito(
-                          fontSize: screenSizeRatio * 0.045, color: MyColors.mainColor, fontWeight: FontWeight.bold))
-                ],
-              ),
+          RichText(
+            textAlign: TextAlign.center,
+            text: TextSpan(
+              children: [
+                TextSpan(
+                    text: "${StringValues.welcomeToOur}\n",
+                    style: GoogleFonts.nunito(fontSize: screenSizeRatio * 0.035, color: MyColors.mainColor)),
+                TextSpan(
+                    text: StringValues.wlfNewFlutterApp,
+                    style: GoogleFonts.nunito(
+                        fontSize: screenSizeRatio * 0.045, color: MyColors.mainColor, fontWeight: FontWeight.bold))
+              ],
             ),
           ),
 

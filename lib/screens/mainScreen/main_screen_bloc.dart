@@ -52,7 +52,7 @@ class MainScreenBloc {
                                 Navigator.pushReplacement(
                                     context,
                                     MaterialPageRoute(
-                                      builder: (context) => GoogleSigninScreen(),
+                                      builder: (context) => GoogleSignInScreen(),
                                     ));
                               },
                             );

@@ -13,10 +13,12 @@ class SplashScreenBloc {
 
   Future<void> navigateToHome(BuildContext context) async {
     await Future.delayed(Duration(milliseconds: 1500));
-    Navigator.pushReplacement(context, MaterialPageRoute(
-      builder: (context) {
-        return _user == null ? GoogleSigninScreen() : MainScreen();
-      },
-    ));
+    if (context.mounted) {
+      Navigator.pushReplacement(context, MaterialPageRoute(
+        builder: (context) {
+          return _user == null ? GoogleSignInScreen() : MainScreen();
+        },
+      ));
+    }
   }
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shimmer/shimmer.dart';
 
 import 'my_colors.dart';
 
@@ -38,5 +39,22 @@ Widget commonElevatedButton({required String title, required Function? onPressed
       child: Text(
         title,
         style: TextStyle(fontWeight: FontWeight.bold, color: MyColors.buttonFontColor, fontSize: elevatedButtonFontSize),
+      ));
+}
+
+TextStyle paginationListViewItemTextStyle() {
+  return TextStyle(
+      color: Colors.white, fontSize: screenSizeRatio * 0.025, fontWeight: FontWeight.bold, overflow: TextOverflow.ellipsis);
+}
+
+Widget textPlaceHolderShimmerEffect() {
+  return Shimmer.fromColors(
+      baseColor: Colors.white,
+      highlightColor: Colors.white10,
+      enabled: true,
+      child: Container(
+        decoration: BoxDecoration(borderRadius: BorderRadiusDirectional.circular(5), color: Colors.white10),
+        width: screenSizeRatio * 0.25,
+        height: screenSizeRatio * 0.02,
       ));
 }

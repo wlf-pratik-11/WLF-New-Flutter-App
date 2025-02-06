@@ -4,10 +4,10 @@ import 'package:wlf_new_flutter_app/screens/paginationScreen/pagination_screen_d
 class PaginationScreenRepo {
   final String url = "https://rickandmortyapi.com/api/character?page=";
   int page = 1;
-  Future<PaginationScreenDl> fetchData() async {
+  Future<PaginationScreenDl> fetchData(int pageNumber) async {
     try {
       final dio = Dio();
-      final response = await dio.get(url + page.toString());
+      final response = await dio.get(url + pageNumber.toString());
       return PaginationScreenDl.fromJson(response.data);
     } catch (e) {
       print("Error in fetching Data :::::::: ${e.toString()}");
