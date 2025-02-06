@@ -15,55 +15,69 @@ class PickImageCameraGallery extends StatefulWidget {
 }
 
 class _PickImageCameraGalleryState extends State<PickImageCameraGallery> {
-  PickImageCameraGalleryBloc _bloc = PickImageCameraGalleryBloc();
+
+  late PickImageCameraGalleryBloc _bloc;
+
+  @override
+  void didChangeDependencies() {
+    _bloc = PickImageCameraGalleryBloc();
+    // TODO: implement didChangeDependencies
+    super.didChangeDependencies();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: commonAppbar(StringValues.pickImageFromCameraAndGallery),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          StreamBuilder<String>(
-              stream: _bloc.imageController,
-              builder: (context, image) {
-                return Expanded(
-                    child: image.data == null
-                        ? Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Icon(
-                                Icons.camera_alt_outlined,
-                                color: Colors.black.withOpacity(0.3),
-                                size: screenSizeRatio * 0.18,
-                              ),
-                              Text(
-                                StringValues.imageNotSelected,
-                                style: TextStyle(fontSize: screenSizeRatio * 0.03),
-                              )
-                            ],
-                          )
-                        : Image.file(File(image.data.toString())));
-              }),
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: screenSizeRatio * 0.02, vertical: screenSizeRatio * 0.02),
-            child: Container(
-              height: buttonHeight,
-              width: double.maxFinite,
-              child: commonElevatedButton(
-                title: StringValues.pickImage,
-                onPressed: () {
-                  _showBottomSheet();
-                },
-              ),
-            ),
-          )
-        ],
-      ),
+      body: _buildBody(),
     );
   }
 
-  Widget? _showBottomSheet() {
+  Widget _buildBody(){
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        StreamBuilder<String>(
+            stream: _bloc.imageController,
+            builder: (context, image) {
+              return Expanded(
+                  child: image.data == null
+                      ? Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        Icons.camera_alt_outlined,
+                        color: Colors.black.withOpacity(0.3),
+                        size: screenSizeRatio * 0.18,
+                      ),
+                      Text(
+                        StringValues.imageNotSelected,
+                        style: TextStyle(fontSize: screenSizeRatio * 0.03),
+                      )
+                    ],
+                  )
+                      : Image.file(File(image.data.toString())));
+            }),
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: screenSizeRatio * 0.02, vertical: screenSizeRatio * 0.02),
+          child: SizedBox(
+            height: buttonHeight,
+            width: double.maxFinite,
+            child: commonElevatedButton(
+              title: StringValues.pickImage,
+              onPressed: () {
+                _showBottomSheet();
+                return null;
+              },
+            ),
+          ),
+        )
+      ],
+    );
+  }
+
+  _showBottomSheet() {
     showModalBottomSheet(
       context: context,
       builder: (context) {

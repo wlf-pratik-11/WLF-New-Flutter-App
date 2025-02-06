@@ -8,6 +8,7 @@ import '../../commons/common_functions.dart';
 import '../../commons/my_colors.dart';
 
 class MainScreenBloc {
+
   final user = FirebaseAuth.instance.currentUser;
 
   Future<void> signOut(BuildContext context) async {
@@ -48,16 +49,18 @@ class MainScreenBloc {
                             await FirebaseAuth.instance.signOut();
                             await GoogleSignIn().signOut().then(
                               (value) {
-                                Navigator.pop(context);
-                                Navigator.pushReplacement(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => GoogleSignInScreen(),
-                                    ));
+                                if(context.mounted){
+                                  Navigator.pop(context);
+                                  Navigator.pushReplacement(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => GoogleSignInScreen(),
+                                      ));
+                                }
                               },
                             );
                           } catch (e) {
-                            print(e.toString());
+                            debugPrint(e.toString());
                           }
                         },
                         child: Text(

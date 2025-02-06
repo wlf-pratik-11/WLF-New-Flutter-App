@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -5,6 +6,7 @@ import 'package:rxdart/rxdart.dart';
 import 'package:wlf_new_flutter_app/commons/my_colors.dart';
 
 class PickImageCameraGalleryBloc {
+
   final imageController = BehaviorSubject<String>();
 
   Future<void> pickImage({bool? isCamera}) async {
@@ -12,16 +14,16 @@ class PickImageCameraGalleryBloc {
       try {
         final image = await ImagePicker().pickImage(source: isCamera == true ? ImageSource.camera : ImageSource.gallery);
         if (image == null) return;
-        CroppedFile? croppedFile = await cropedImage(image.path);
+        CroppedFile? croppedFile = await croppedImage(image.path);
         if (croppedFile == null) return;
         imageController.sink.add(croppedFile.path);
       } catch (e) {
-        print(e.toString());
+        debugPrint(e.toString());
       }
     }
   }
 
-  Future<CroppedFile?> cropedImage(String path) async {
+  Future<CroppedFile?> croppedImage(String path) async {
     CroppedFile? croppedFile = await ImageCropper().cropImage(
       sourcePath: path,
       compressFormat: ImageCompressFormat.jpg,

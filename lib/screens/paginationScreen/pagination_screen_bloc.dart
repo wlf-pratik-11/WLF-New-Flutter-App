@@ -1,4 +1,5 @@
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
+import 'package:rxdart/rxdart.dart';
 import 'package:wlf_new_flutter_app/screens/paginationScreen/pagination_screen_dl.dart';
 import 'package:wlf_new_flutter_app/screens/paginationScreen/pagination_screen_repo.dart';
 
@@ -11,6 +12,10 @@ class PaginationScreenBloc {
     );
   }
   PaginationScreenRepo repo = PaginationScreenRepo();
+  final imageLoadingController = BehaviorSubject<bool>.seeded(true);
+  final isExpanded = BehaviorSubject<bool>.seeded(false);
+
+
   PagingController<int, Results> pagingController = PagingController(firstPageKey: 1);
 
   Future<void> getData(int pageNumber) async {
@@ -23,10 +28,5 @@ class PaginationScreenBloc {
       final nextPageKey = pageNumber + resultsList.length;
       pagingController.appendPage(resultsList, nextPageKey);
     }
-  }
-
-  Future<bool> showImage() async {
-    await Future.delayed(Duration(microseconds: 150));
-    return true;
   }
 }

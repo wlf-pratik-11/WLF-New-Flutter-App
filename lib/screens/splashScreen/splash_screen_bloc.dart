@@ -12,7 +12,7 @@ class SplashScreenBloc {
   final _user = FirebaseAuth.instance.currentUser;
 
   Future<void> navigateToHome(BuildContext context) async {
-    await Future.delayed(Duration(milliseconds: 1500));
+    await Future.delayed(Duration(milliseconds: 1000));
     if (context.mounted) {
       Navigator.pushReplacement(context, MaterialPageRoute(
         builder: (context) {
