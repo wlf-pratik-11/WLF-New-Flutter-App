@@ -4,6 +4,7 @@ class StringValues {
   static String tabBarDemo = "Tab bar Demo";
   static String pickImageFromCameraAndGalleryDemo = "Pick Image From Camera and Gallery Demo";
   static String paginationDemo = "Pagination Demo";
+  static String firebaseCrudDemo = "Firebase Crud Demo";
 
   //Main.dart
 
@@ -39,6 +40,7 @@ class StringValues {
   static String origin = "Origin";
   static String created = "Created";
   static String tapToShowMore = "Show More";
+  static String noLocationFound = "No Location Found";
 
   //Pick Image From Camera and Gallery
 
@@ -61,4 +63,9 @@ class StringValues {
   static String bottomSheetDemo = "Bottom Sheet Demo";
   static String confirm = "Confirm";
   static String showBottomSheet = "Show Bottom Sheet";
+
+  //Firebase Crud Screen
+
+  static String firebaseCrudScreen = "Firebase Crud Screen";
+  static String addToCart = "Add To Cart";
 }

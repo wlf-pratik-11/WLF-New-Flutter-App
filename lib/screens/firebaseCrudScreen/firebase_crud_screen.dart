@@ -1,0 +1,227 @@
+import 'package:firebase_database/firebase_database.dart';
+import 'package:firebase_database/ui/firebase_animated_list.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:wlf_new_flutter_app/commons/common_functions.dart';
+import 'package:wlf_new_flutter_app/commons/my_colors.dart';
+import 'package:wlf_new_flutter_app/commons/string_values.dart';
+import 'package:wlf_new_flutter_app/screens/firebaseCrudScreen/firebase_crud_screen_bloc.dart';
+
+class FirebaseCrudScreen extends StatefulWidget {
+  const FirebaseCrudScreen({super.key});
+
+  @override
+  State<FirebaseCrudScreen> createState() => _FirebaseCrudScreenState();
+}
+
+class _FirebaseCrudScreenState extends State<FirebaseCrudScreen> {
+  late FirebaseCrudScreenBloc _bloc;
+  @override
+  void didChangeDependencies() {
+    _bloc = FirebaseCrudScreenBloc();
+    // TODO: implement didChangeDependencies
+    super.didChangeDependencies();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: commonAppbar(StringValues.firebaseCrudScreen),
+      body: _buildBody(),
+    );
+  }
+
+  _buildBody() {
+    return FirebaseAnimatedList(
+      query: _bloc.getFirebaseRef(),
+      itemBuilder: (context, snapshot, animation, index) {
+        return cardForFirebaseAnimatedList(snapshot: snapshot, index: index);
+      },
+    );
+  }
+
+  Widget cardForFirebaseAnimatedList({required DataSnapshot snapshot, required int index}) {
+    return Card(
+      color: Colors.white,
+      elevation: 5,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadiusDirectional.circular(5)),
+      margin: EdgeInsets.symmetric(vertical: screenSizeRatio * 0.01, horizontal: screenSizeRatio * 0.015),
+      child: Padding(
+        padding: EdgeInsets.all(screenSizeRatio * 0.02),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.max,
+          children: [cardLeftPart(), cardRightPart(snapshot: snapshot, index: index)],
+        ),
+      ),
+    );
+  }
+
+  Widget cardLeftPart() {
+    return Expanded(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.start,
+        mainAxisSize: MainAxisSize.max,
+        children: [
+          Image.network(
+            "https://media-ik.croma.com/prod/https://media.croma.com/image/upload/v1725959668/Croma%20Assets/Communication/Mobiles/Images/309732_0_oxoamu.png?tr=w-600",
+            height: screenSizeRatio * 0.25,
+            width: screenSizeRatio * 0.25,
+          ),
+          SizedBox(
+            height: screenSizeRatio * 0.03,
+          ),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              addOnInfoRow(assetImagePath: "assets/images/localshipping.png", description: "Free Delivery.!!"),
+              addOnInfoRow(assetImagePath: "assets/images/verified.png", description: "1 Year Warranty"),
+              addOnInfoRow(assetImagePath: "assets/images/brand.png", description: "Top Brand"),
+            ],
+          )
+        ],
+      ),
+    );
+  }
+
+  Widget cardRightPart({required DataSnapshot snapshot, required int index}) {
+    return Expanded(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          Padding(
+            padding: EdgeInsets.symmetric(vertical: screenSizeRatio * 0.01),
+            child: Row(
+              mainAxisSize: MainAxisSize.max,
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                Expanded(
+                  flex: 3,
+                  child: Text(
+                    snapshot.child("name").value.toString(),
+                    softWrap: true,
+                    maxLines: 2,
+                    overflow: TextOverflow.fade,
+                    style: TextStyle(fontSize: screenSizeRatio * 0.03, fontWeight: FontWeight.w700, color: MyColors.mainColor),
+                  ),
+                ),
+                Container(
+                  margin: EdgeInsets.symmetric(horizontal: screenSizeRatio * 0.02),
+                  decoration: BoxDecoration(
+                      color: CupertinoColors.systemGreen.withOpacity(0.2),
+                      shape: BoxShape.rectangle,
+                      borderRadius: BorderRadiusDirectional.circular(5)),
+                  child: Center(
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(vertical: screenSizeRatio * 0.008, horizontal: screenSizeRatio * 0.009),
+                      child: Text(
+                        snapshot.child("inStock").value == true ? "In Stock" : "Stock Out",
+                        style: TextStyle(
+                            color: snapshot.child("inStock").value == true ? Colors.green : Colors.red,
+                            fontSize: screenSizeRatio * 0.02,
+                            fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                  ),
+                )
+              ],
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.symmetric(vertical: screenSizeRatio * 0.01),
+            child: Row(
+              children: [
+                Icon(
+                  Icons.currency_rupee,
+                  color: MyColors.mainColor,
+                  size: screenSizeRatio * 0.03,
+                ),
+                Text(
+                  snapshot.child("price").value.toString(),
+                  style: TextStyle(
+                    fontSize: screenSizeRatio * 0.03,
+                    fontWeight: FontWeight.w500,
+                    color: MyColors.mainColor,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.symmetric(vertical: screenSizeRatio * 0.01),
+            child: Wrap(
+              children: [
+                variantContainer("64 GB"),
+                variantContainer("128 GB"),
+                variantContainer("256 GB"),
+                variantContainer("512 GB"),
+                variantContainer("1 TB"),
+              ],
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.symmetric(vertical: screenSizeRatio * 0.01),
+            child: Text(
+              "Spacial offer ${snapshot.child("offer").value}% off",
+              style: TextStyle(fontWeight: FontWeight.w700, color: MyColors.offerTextColor, fontSize: screenSizeRatio * 0.025),
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.symmetric(vertical: screenSizeRatio * 0.01),
+            child: commonElevatedIconButton(
+              title: StringValues.addToCart,
+              leading: Image.asset(
+                "assets/images/addToCart.png",
+                width: screenSizeRatio * 0.035,
+              ),
+              onPressed: () {},
+            ),
+          )
+        ],
+      ),
+    );
+  }
+
+  Widget addOnInfoRow({required String assetImagePath, required String description}) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: [
+        Container(
+          padding: EdgeInsets.symmetric(horizontal: screenSizeRatio * 0.004, vertical: screenSizeRatio * 0.004),
+          margin: EdgeInsets.symmetric(horizontal: screenSizeRatio * 0.01, vertical: screenSizeRatio * 0.005),
+          decoration: BoxDecoration(
+            border: Border.all(color: MyColors.darkBlue),
+            borderRadius: BorderRadiusDirectional.circular(100),
+          ),
+          child: Padding(
+            padding: EdgeInsets.all(screenSizeRatio * 0.005),
+            child: Image.asset(
+              assetImagePath,
+              width: screenSizeRatio * 0.03,
+            ),
+          ),
+        ),
+        Text(
+          description,
+          style: TextStyle(color: MyColors.darkBlue, fontSize: screenSizeRatio * 0.025, fontWeight: FontWeight.w700),
+        )
+      ],
+    );
+  }
+
+  Widget variantContainer(String varient) {
+    return Container(
+      margin: EdgeInsets.symmetric(horizontal: screenSizeRatio * 0.008, vertical: screenSizeRatio * 0.005),
+      padding: EdgeInsets.symmetric(vertical: screenSizeRatio * 0.006, horizontal: screenSizeRatio * 0.012),
+      decoration:
+          BoxDecoration(color: Colors.black54, shape: BoxShape.rectangle, borderRadius: BorderRadiusDirectional.circular(5)),
+      child: Text(
+        varient,
+        style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+      ),
+    );
+  }
+}

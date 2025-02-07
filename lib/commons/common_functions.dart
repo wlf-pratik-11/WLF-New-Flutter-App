@@ -58,3 +58,19 @@ Widget textPlaceHolderShimmerEffect() {
         height: screenSizeRatio * 0.02,
       ));
 }
+
+Widget commonElevatedIconButton({required String title, required Function? onPressed(), required Widget leading}) {
+  return SizedBox(
+    width: double.maxFinite,
+    child: ElevatedButton.icon(
+        icon: leading,
+        onPressed: onPressed,
+        style: ElevatedButton.styleFrom(
+            backgroundColor: MyColors.lightBlue,
+            shape: RoundedRectangleBorder(borderRadius: BorderRadiusDirectional.circular(5))),
+        label: Text(
+          title,
+          style: TextStyle(fontWeight: FontWeight.bold, color: MyColors.darkBlue, fontSize: screenSizeRatio * 0.03),
+        )),
+  );
+}

@@ -44,15 +44,11 @@ class _PaginationScreenState extends State<PaginationScreen> {
             return _shimmerEffectForList();
           },
           newPageProgressIndicatorBuilder: (context) {
-            return Center(
-                child: LoadingAnimationWidget.discreteCircle(
-                    color: MyColors.mainColor, size: screenSizeRatio * 0.05));
+            return Center(child: LoadingAnimationWidget.discreteCircle(color: MyColors.mainColor, size: screenSizeRatio * 0.05));
           },
           itemBuilder: (context, item, index) {
             return Padding(
-              padding: EdgeInsets.symmetric(
-                  vertical: screenSizeRatio * 0.01,
-                  horizontal: screenSizeRatio * 0.02),
+              padding: EdgeInsets.symmetric(vertical: screenSizeRatio * 0.01, horizontal: screenSizeRatio * 0.02),
               child: _expansionTile(item),
             );
           },
@@ -65,21 +61,16 @@ class _PaginationScreenState extends State<PaginationScreen> {
       itemCount: 10,
       itemBuilder: (context, index) {
         return Padding(
-          padding: EdgeInsets.symmetric(
-              vertical: screenSizeRatio * 0.01,
-              horizontal: screenSizeRatio * 0.02),
+          padding: EdgeInsets.symmetric(vertical: screenSizeRatio * 0.01, horizontal: screenSizeRatio * 0.02),
           child: Shimmer.fromColors(
             baseColor: Colors.white,
             highlightColor: Colors.white10,
             child: ListTile(
               minTileHeight: screenSizeRatio * 0.15,
               tileColor: MyColors.listTileColors,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadiusDirectional.circular(10)),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadiusDirectional.circular(10)),
               leading: Container(
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadiusDirectional.circular(100),
-                    color: Colors.white),
+                decoration: BoxDecoration(borderRadius: BorderRadiusDirectional.circular(100), color: Colors.white),
                 height: screenSizeRatio * 0.07,
                 width: screenSizeRatio * 0.07,
               ),
@@ -125,112 +116,122 @@ class _PaginationScreenState extends State<PaginationScreen> {
     );
   }
 
-  Widget _expansionTile(Results item){
-    return ExpansionTile(
-      onExpansionChanged: (value) {
-        isExpanded = value;
-      },
-      enabled: false,
-      minTileHeight: screenSizeRatio * 0.15,
-      collapsedBackgroundColor: MyColors.listTileColors,
-      collapsedShape: RoundedRectangleBorder(
-          borderRadius: BorderRadiusDirectional.circular(5)),
-      shape: RoundedRectangleBorder(
-          borderRadius: BorderRadiusDirectional.circular(10)),
-      leading: ClipRRect(
-        borderRadius: BorderRadiusDirectional.circular(100),
-        child: FutureBuilder<bool>(
-          future: Future.delayed(Duration(seconds: 2), () => true),
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return Padding(
-                padding: EdgeInsets.all(screenSizeRatio *0.01),
-                child: LoadingAnimationWidget.discreteCircle(
-                  color: MyColors.mainColor,
-                  size: screenSizeRatio * 0.05,
-                ),
-              );
-            } else {
-              return Image(
-                image: NetworkImage(item.image.toString()),
-                height: screenSizeRatio * 0.07,
-                width: screenSizeRatio * 0.07,
-                fit: BoxFit.cover,
-              );
-            }
-          },
-        ),
+  Widget _expansionTile(Results item) {
+    return StreamBuilder<bool>(
+        stream: _bloc.isExpanded,
+        builder: (context, isExpandedSnapshot) {
+          return ExpansionTile(
+            initiallyExpanded: isExpandedSnapshot.data ?? false,
+            minTileHeight: screenSizeRatio * 0.15,
+            collapsedBackgroundColor: MyColors.listTileColors,
+            collapsedShape: RoundedRectangleBorder(borderRadius: BorderRadiusDirectional.circular(5)),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadiusDirectional.circular(10)),
+            leading: _leading(item),
+            title: _title(item),
+            subtitle: _subTitle(item),
+            trailing: _trailing(item, isExpandedSnapshot),
+            children: _expansionTileChildren(item),
+          );
+        });
+  }
+
+  Widget _leading(Results item) {
+    return ClipRRect(
+      borderRadius: BorderRadiusDirectional.circular(100),
+      child: Image.network(
+        item.image.toString(),
+        height: screenSizeRatio * 0.07,
+        width: screenSizeRatio * 0.07,
+        fit: BoxFit.cover,
+        frameBuilder: (context, child, frame, wasSynchronouslyLoaded) {
+          if (wasSynchronouslyLoaded) {
+            return child;
+          }
+          return AnimatedOpacity(
+            opacity: frame == null ? 0 : 1,
+            duration: const Duration(seconds: 1),
+            curve: Curves.easeOut,
+            child: child,
+          );
+        },
+        errorBuilder: (context, error, stackTrace) {
+          return Icon(Icons.broken_image);
+        },
       ),
-      title: Text(
-        item.name.toString(),
-        style: TextStyle(
-          color: MyColors.mainColor,
-          fontSize: screenSizeRatio * 0.03,
-          fontWeight: FontWeight.bold,
-          overflow: TextOverflow.ellipsis,
-        ),
-        maxLines: 2,
+    );
+  }
+
+  Widget _title(Results item) {
+    return Text(
+      item.name.toString(),
+      style: TextStyle(
+        color: MyColors.mainColor,
+        fontSize: screenSizeRatio * 0.03,
+        fontWeight: FontWeight.bold,
+        overflow: TextOverflow.ellipsis,
       ),
-      subtitle: Text(
-        item.location!.name.toString(),
-        style: TextStyle(
-            color: MyColors.mainColor,
-            fontSize: screenSizeRatio * 0.02,
-            fontWeight: FontWeight.w500,
-            overflow: TextOverflow.ellipsis),
-        maxLines: 2,
+      maxLines: 2,
+    );
+  }
+
+  Widget _subTitle(Results item) {
+    return Text(
+      item.location?.name.toString() ?? StringValues.noLocationFound,
+      style: TextStyle(
+        color: MyColors.mainColor,
+        fontSize: screenSizeRatio * 0.02,
+        fontWeight: FontWeight.w500,
+        overflow: TextOverflow.ellipsis,
       ),
-      trailing: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Container(
-            // padding: EdgeInsets.symmetric(vertical: screenSizeRatio * 0.02),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadiusDirectional.circular(5),
-              color: item.gender == "Male"
-                  ? Colors.green.shade100
-                  : Colors.red.shade100,
-            ),
-            height: screenSizeRatio * 0.05,
-            width: screenSizeRatio * 0.12,
-            child: Center(
-              child: Text(
-                item.gender.toString(),
-                style: TextStyle(
-                    color: item.gender == "Male"
-                        ? Colors.green
-                        : Colors.red,
-                    fontWeight: FontWeight.w700,
-                    fontSize: screenSizeRatio * 0.023),
+      maxLines: 2,
+    );
+  }
+
+  Widget _trailing(Results item, AsyncSnapshot<bool> isExpandedSnapshot) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadiusDirectional.circular(5),
+            color: item.gender == "Male" ? Colors.green.shade100 : Colors.red.shade100,
+          ),
+          height: screenSizeRatio * 0.05,
+          width: screenSizeRatio * 0.12,
+          child: Center(
+            child: Text(
+              item.gender.toString(),
+              style: TextStyle(
+                color: item.gender == "Male" ? Colors.green : Colors.red,
+                fontWeight: FontWeight.w700,
+                fontSize: screenSizeRatio * 0.023,
               ),
             ),
           ),
-          StreamBuilder<bool>(
-            stream: _bloc.isExpanded,
-            builder: (context, isExpandedSnapshot) {
-              return GestureDetector(
-                onTap: () {
-                  _bloc.isExpanded.sink.add(!isExpanded);
-                },
-                child: Icon(
-                  isExpandedSnapshot.data == true ? Icons.expand_less : Icons.expand_more,
-                  size: screenSizeRatio * 0.04,
-                ),
-              );
-            }
+        ),
+        InkWell(
+          onTap: () {
+            _bloc.isExpanded.sink.add(!(isExpandedSnapshot.data ?? false));
+          },
+          child: Icon(
+            isExpandedSnapshot.data == true ? Icons.expand_less : Icons.expand_more,
+            size: screenSizeRatio * 0.04,
           ),
-        ],
-      ),
-      children: [
-        _infoRow(label:StringValues.species,value:  item.species.toString()),
-        _infoRow(label:StringValues.status,value:  item.status.toString()),
-        _infoRow(label:StringValues.origin,value:  item.origin!.name.toString()),
-        _infoRow(label:StringValues.created,value:  item.created.toString()),
+        ),
       ],
     );
   }
 
-  Widget _infoRow({required String label,required  String value}) {
+  List<Widget> _expansionTileChildren(Results item) {
+    return [
+      _infoRow(label: StringValues.species, value: item.species.toString()),
+      _infoRow(label: StringValues.status, value: item.status.toString()),
+      _infoRow(label: StringValues.origin, value: item.origin!.name.toString()),
+      _infoRow(label: StringValues.created, value: item.created.toString()),
+    ];
+  }
+
+  Widget _infoRow({required String label, required String value}) {
     return Row(
       children: [
         SizedBox(width: screenSizeRatio * 0.14),
@@ -249,5 +250,4 @@ class _PaginationScreenState extends State<PaginationScreen> {
       ],
     );
   }
-
 }

@@ -12,9 +12,7 @@ class PaginationScreenBloc {
     );
   }
   PaginationScreenRepo repo = PaginationScreenRepo();
-  final imageLoadingController = BehaviorSubject<bool>.seeded(true);
   final isExpanded = BehaviorSubject<bool>.seeded(false);
-
 
   PagingController<int, Results> pagingController = PagingController(firstPageKey: 1);
 

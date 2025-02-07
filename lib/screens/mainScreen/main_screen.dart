@@ -2,11 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:wlf_new_flutter_app/commons/common_functions.dart';
 import 'package:wlf_new_flutter_app/commons/my_colors.dart';
 import 'package:wlf_new_flutter_app/commons/string_values.dart';
+import 'package:wlf_new_flutter_app/screens/firebaseCrudScreen/firebase_crud_screen.dart';
 import 'package:wlf_new_flutter_app/screens/paginationScreen/pagination_screen.dart';
+import 'package:wlf_new_flutter_app/screens/tabBarScreen/tabbar_screen.dart';
 
 import '../../commons/DrawerDl.dart';
 import '../selectImageFronCameraAndGallery/pick_image_camera_gallery.dart';
-import '../tabBarScreen/tabbar_screen.dart';
 import 'main_screen_bloc.dart';
 
 class MainScreen extends StatefulWidget {
@@ -17,7 +18,6 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
-
   late MainScreenBloc _bloc;
 
   @override
@@ -31,6 +31,7 @@ class _MainScreenState extends State<MainScreen> {
     DrawerDl(TabBarScreen(), StringValues.tabBarDemo),
     DrawerDl(PickImageCameraGallery(), StringValues.pickImageFromCameraAndGalleryDemo),
     DrawerDl(PaginationScreen(), StringValues.paginationDemo),
+    DrawerDl(FirebaseCrudScreen(), StringValues.firebaseCrudDemo),
   ];
 
   @override
@@ -50,7 +51,7 @@ class _MainScreenState extends State<MainScreen> {
     );
   }
 
-  Widget _buildBody(){
+  Widget _buildBody() {
     return Center(
       child: Text(
         StringValues.welcomeToOurApp,
@@ -59,7 +60,7 @@ class _MainScreenState extends State<MainScreen> {
     );
   }
 
-  Drawer _drawer(){
+  Drawer _drawer() {
     return Drawer(
       backgroundColor: Colors.white,
       child: Column(
@@ -118,8 +119,7 @@ class _MainScreenState extends State<MainScreen> {
                   child: ListTile(
                     title: Text(
                       "${lst[index].screenTitle}",
-                      style:
-                      TextStyle(color: MyColors.mainColor, fontWeight: FontWeight.bold, fontSize: screenSizeRatio * 0.025),
+                      style: TextStyle(color: MyColors.mainColor, fontWeight: FontWeight.bold, fontSize: screenSizeRatio * 0.025),
                     ),
                     tileColor: Colors.white,
                   ),
@@ -131,5 +131,4 @@ class _MainScreenState extends State<MainScreen> {
       ),
     );
   }
-
 }

@@ -15,7 +15,6 @@ class GoogleSignInScreen extends StatefulWidget {
 }
 
 class _GoogleSignInScreenState extends State<GoogleSignInScreen> {
-
   late final GoogleSignInScreenBloc _bloc;
 
   @override
@@ -32,7 +31,7 @@ class _GoogleSignInScreenState extends State<GoogleSignInScreen> {
     );
   }
 
-  Widget _buildBody(){
+  Widget _buildBody() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       mainAxisAlignment: MainAxisAlignment.start,
@@ -54,7 +53,7 @@ class _GoogleSignInScreenState extends State<GoogleSignInScreen> {
     );
   }
 
-  Widget _titleOfScreen(){
+  Widget _titleOfScreen() {
     return RichText(
       textAlign: TextAlign.center,
       text: TextSpan(
@@ -64,21 +63,21 @@ class _GoogleSignInScreenState extends State<GoogleSignInScreen> {
               style: GoogleFonts.nunito(fontSize: screenSizeRatio * 0.035, color: MyColors.mainColor)),
           TextSpan(
               text: StringValues.wlfNewFlutterApp,
-              style: GoogleFonts.nunito(
-                  fontSize: screenSizeRatio * 0.045, color: MyColors.mainColor, fontWeight: FontWeight.bold))
+              style:
+                  GoogleFonts.nunito(fontSize: screenSizeRatio * 0.045, color: MyColors.mainColor, fontWeight: FontWeight.bold))
         ],
       ),
     );
   }
 
-  Widget _screenImage(){
+  Widget _screenImage() {
     return Padding(
       padding: EdgeInsets.symmetric(vertical: screenSizeRatio * 0.05),
       child: Image(image: AssetImage("assets/images/loginScreenVector.png")),
     );
   }
 
-  Widget signInWithGoogleButtonContainer(){
+  Widget signInWithGoogleButtonContainer() {
     return Container(
       height: buttonHeight,
       width: double.maxFinite,
@@ -86,15 +85,12 @@ class _GoogleSignInScreenState extends State<GoogleSignInScreen> {
       child: StreamBuilder<bool>(
           stream: _bloc.isSignInProcessing,
           builder: (context, isSignInProcessingSnapshot) {
-            return isSignInProcessingSnapshot.data==false ?
-            enableButton():
-            disableButton();
-          }
-      ),
+            return isSignInProcessingSnapshot.data == false ? enableButton() : disableButton();
+          }),
     );
   }
 
-  Widget enableButton(){
+  Widget enableButton() {
     return ElevatedButton.icon(
       label: Text(
         StringValues.signInWithGoogle,
@@ -108,20 +104,18 @@ class _GoogleSignInScreenState extends State<GoogleSignInScreen> {
         await _bloc.signInWithGoogle(context);
       },
       style: ElevatedButton.styleFrom(
-          backgroundColor: MyColors.mainColor,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadiusDirectional.circular(7))),
+          backgroundColor: MyColors.mainColor, shape: RoundedRectangleBorder(borderRadius: BorderRadiusDirectional.circular(7))),
     );
   }
 
-  Widget disableButton(){
+  Widget disableButton() {
     return ElevatedButton(
       onPressed: null,
       style: ElevatedButton.styleFrom(
           disabledBackgroundColor: MyColors.mainColor.withOpacity(0.6),
           backgroundColor: MyColors.mainColor,
           shape: RoundedRectangleBorder(borderRadius: BorderRadiusDirectional.circular(7))),
-      child: LoadingAnimationWidget.discreteCircle(color: MyColors.mainColor, size: screenSizeRatio*0.05),
+      child: LoadingAnimationWidget.discreteCircle(color: MyColors.mainColor, size: screenSizeRatio * 0.05),
     );
   }
-
 }

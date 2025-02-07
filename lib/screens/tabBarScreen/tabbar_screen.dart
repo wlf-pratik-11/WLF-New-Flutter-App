@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:wlf_new_flutter_app/commons/common_functions.dart';
-import 'package:wlf_new_flutter_app/commons/string_values.dart';
 
+import '../../commons/common_functions.dart';
 import '../../commons/my_colors.dart';
+import '../../commons/string_values.dart';
 
 class TabBarScreen extends StatefulWidget {
   const TabBarScreen({super.key});
@@ -23,7 +23,7 @@ class _TabBarScreenState extends State<TabBarScreen> {
     );
   }
 
-  Widget _buildBody(){
+  Widget _buildBody() {
     return TabBarView(children: [
       Center(
         child: ElevatedButton(
@@ -74,7 +74,7 @@ class _TabBarScreenState extends State<TabBarScreen> {
     ]);
   }
 
-  AppBar _appBar(){
+  AppBar _appBar() {
     return AppBar(
       iconTheme: IconThemeData(color: Colors.white),
       backgroundColor: MyColors.mainColor,
@@ -86,7 +86,7 @@ class _TabBarScreenState extends State<TabBarScreen> {
     );
   }
 
-  TabBar _tabBar(){
+  TabBar _tabBar() {
     return TabBar(
       tabs: [
         Tab(
