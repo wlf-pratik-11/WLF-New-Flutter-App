@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:wlf_new_flutter_app/commons/common_functions.dart';
 import 'package:wlf_new_flutter_app/commons/my_colors.dart';
 import 'package:wlf_new_flutter_app/commons/string_values.dart';
+import 'package:wlf_new_flutter_app/screens/firebaseCrudScreen/firebaseAddPhoneScreen/firebase_add_phone_screen.dart';
 import 'package:wlf_new_flutter_app/screens/firebaseCrudScreen/firebase_crud_screen_bloc.dart';
 
 class FirebaseCrudScreen extends StatefulWidget {
@@ -26,7 +27,9 @@ class _FirebaseCrudScreenState extends State<FirebaseCrudScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: commonAppbar(StringValues.firebaseCrudScreen),
+      appBar: commonAppbar(StringValues.firebaseCrudScreen,actions: [IconButton(onPressed: () {
+        Navigator.push(context, MaterialPageRoute(builder: (context) => FirebaseAddPhoneScreen(),));
+      }, icon: Icon(Icons.add_box_outlined),padding: EdgeInsets.symmetric(horizontal: screenSizeRatio*0.03),)]),
       body: _buildBody(),
     );
   }
@@ -52,13 +55,13 @@ class _FirebaseCrudScreenState extends State<FirebaseCrudScreen> {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.max,
-          children: [cardLeftPart(), cardRightPart(snapshot: snapshot, index: index)],
+          children: [cardLeftPart(snapshot: snapshot,index: index), cardRightPart(snapshot: snapshot, index: index)],
         ),
       ),
     );
   }
 
-  Widget cardLeftPart() {
+  Widget cardLeftPart({required DataSnapshot snapshot, required int index}) {
     return Expanded(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -66,9 +69,20 @@ class _FirebaseCrudScreenState extends State<FirebaseCrudScreen> {
         mainAxisSize: MainAxisSize.max,
         children: [
           Image.network(
-            "https://media-ik.croma.com/prod/https://media.croma.com/image/upload/v1725959668/Croma%20Assets/Communication/Mobiles/Images/309732_0_oxoamu.png?tr=w-600",
+            snapshot.child("imgUrl").value.toString(),
             height: screenSizeRatio * 0.25,
             width: screenSizeRatio * 0.25,
+            frameBuilder: (context, child, frame, wasSynchronouslyLoaded) {
+              if (wasSynchronouslyLoaded) {
+                return child;
+              }
+              return AnimatedOpacity(
+                opacity: frame == null ? 0 : 1,
+                duration: const Duration(seconds: 2),
+                curve: Curves.easeOut,
+                child: child,
+              );
+            },
           ),
           SizedBox(
             height: screenSizeRatio * 0.03,
@@ -103,7 +117,7 @@ class _FirebaseCrudScreenState extends State<FirebaseCrudScreen> {
                   child: Text(
                     snapshot.child("name").value.toString(),
                     softWrap: true,
-                    maxLines: 2,
+                    maxLines: 3,
                     overflow: TextOverflow.fade,
                     style: TextStyle(fontSize: screenSizeRatio * 0.03, fontWeight: FontWeight.w700, color: MyColors.mainColor),
                   ),
@@ -111,7 +125,7 @@ class _FirebaseCrudScreenState extends State<FirebaseCrudScreen> {
                 Container(
                   margin: EdgeInsets.symmetric(horizontal: screenSizeRatio * 0.02),
                   decoration: BoxDecoration(
-                      color: CupertinoColors.systemGreen.withOpacity(0.2),
+                      color: snapshot.child("inStock").value == true ?CupertinoColors.systemGreen.withOpacity(0.2) : CupertinoColors.destructiveRed.withOpacity(0.2),
                       shape: BoxShape.rectangle,
                       borderRadius: BorderRadiusDirectional.circular(5)),
                   child: Center(
@@ -164,8 +178,10 @@ class _FirebaseCrudScreenState extends State<FirebaseCrudScreen> {
           ),
           Padding(
             padding: EdgeInsets.symmetric(vertical: screenSizeRatio * 0.01),
-            child: Text(
-              "Spacial offer ${snapshot.child("offer").value}% off",
+            child:
+            Text(snapshot.child("inOffer").value == true ?
+              "Spacial offer ${snapshot.child("offer").value}% off":
+                "Get the Best Deals at Unbeatable Prices!",
               style: TextStyle(fontWeight: FontWeight.w700, color: MyColors.offerTextColor, fontSize: screenSizeRatio * 0.025),
             ),
           ),
@@ -212,14 +228,14 @@ class _FirebaseCrudScreenState extends State<FirebaseCrudScreen> {
     );
   }
 
-  Widget variantContainer(String varient) {
+  Widget variantContainer(String varieant) {
     return Container(
       margin: EdgeInsets.symmetric(horizontal: screenSizeRatio * 0.008, vertical: screenSizeRatio * 0.005),
       padding: EdgeInsets.symmetric(vertical: screenSizeRatio * 0.006, horizontal: screenSizeRatio * 0.012),
       decoration:
           BoxDecoration(color: Colors.black54, shape: BoxShape.rectangle, borderRadius: BorderRadiusDirectional.circular(5)),
       child: Text(
-        varient,
+        varieant,
         style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
       ),
     );

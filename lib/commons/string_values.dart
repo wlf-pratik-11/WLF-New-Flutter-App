@@ -68,4 +68,8 @@ class StringValues {
 
   static String firebaseCrudScreen = "Firebase Crud Screen";
   static String addToCart = "Add To Cart";
+
+  //Firebase Add Phone Screen
+
+  static String addPhoneDetails = "Add Phone Details";
 }
