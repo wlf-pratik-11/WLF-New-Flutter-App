@@ -27,9 +27,19 @@ class _FirebaseCrudScreenState extends State<FirebaseCrudScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: commonAppbar(StringValues.firebaseCrudScreen,actions: [IconButton(onPressed: () {
-        Navigator.push(context, MaterialPageRoute(builder: (context) => FirebaseAddPhoneScreen(),));
-      }, icon: Icon(Icons.add_box_outlined),padding: EdgeInsets.symmetric(horizontal: screenSizeRatio*0.03),)]),
+      appBar: commonAppbar(StringValues.firebaseCrudScreen, actions: [
+        IconButton(
+          onPressed: () {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => FirebaseAddPhoneScreen(),
+                ));
+          },
+          icon: Icon(Icons.add_box_outlined),
+          padding: EdgeInsets.symmetric(horizontal: screenSizeRatio * 0.03),
+        )
+      ]),
       body: _buildBody(),
     );
   }
@@ -55,7 +65,7 @@ class _FirebaseCrudScreenState extends State<FirebaseCrudScreen> {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.max,
-          children: [cardLeftPart(snapshot: snapshot,index: index), cardRightPart(snapshot: snapshot, index: index)],
+          children: [cardLeftPart(snapshot: snapshot, index: index), cardRightPart(snapshot: snapshot, index: index)],
         ),
       ),
     );
@@ -90,9 +100,9 @@ class _FirebaseCrudScreenState extends State<FirebaseCrudScreen> {
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              addOnInfoRow(assetImagePath: "assets/images/localshipping.png", description: "Free Delivery.!!"),
-              addOnInfoRow(assetImagePath: "assets/images/verified.png", description: "1 Year Warranty"),
-              addOnInfoRow(assetImagePath: "assets/images/brand.png", description: "Top Brand"),
+              addOnInfoRow(assetImagePath: "assets/images/localshipping.png", description: StringValues.freeDelivery),
+              addOnInfoRow(assetImagePath: "assets/images/verified.png", description: StringValues.yearWarranty),
+              addOnInfoRow(assetImagePath: "assets/images/brand.png", description: StringValues.topBrand),
             ],
           )
         ],
@@ -125,14 +135,16 @@ class _FirebaseCrudScreenState extends State<FirebaseCrudScreen> {
                 Container(
                   margin: EdgeInsets.symmetric(horizontal: screenSizeRatio * 0.02),
                   decoration: BoxDecoration(
-                      color: snapshot.child("inStock").value == true ?CupertinoColors.systemGreen.withOpacity(0.2) : CupertinoColors.destructiveRed.withOpacity(0.2),
+                      color: snapshot.child("inStock").value == true
+                          ? CupertinoColors.systemGreen.withOpacity(0.2)
+                          : CupertinoColors.destructiveRed.withOpacity(0.2),
                       shape: BoxShape.rectangle,
                       borderRadius: BorderRadiusDirectional.circular(5)),
                   child: Center(
                     child: Padding(
                       padding: EdgeInsets.symmetric(vertical: screenSizeRatio * 0.008, horizontal: screenSizeRatio * 0.009),
                       child: Text(
-                        snapshot.child("inStock").value == true ? "In Stock" : "Stock Out",
+                        snapshot.child("inStock").value == true ? StringValues.inStock : StringValues.stockOut,
                         style: TextStyle(
                             color: snapshot.child("inStock").value == true ? Colors.green : Colors.red,
                             fontSize: screenSizeRatio * 0.02,
@@ -178,10 +190,10 @@ class _FirebaseCrudScreenState extends State<FirebaseCrudScreen> {
           ),
           Padding(
             padding: EdgeInsets.symmetric(vertical: screenSizeRatio * 0.01),
-            child:
-            Text(snapshot.child("inOffer").value == true ?
-              "Spacial offer ${snapshot.child("offer").value}% off":
-                "Get the Best Deals at Unbeatable Prices!",
+            child: Text(
+              snapshot.child("inOffer").value == true
+                  ? "Spacial offer ${snapshot.child("offer").value}% off"
+                  : "Get the Best Deals at Unbeatable Prices!",
               style: TextStyle(fontWeight: FontWeight.w700, color: MyColors.offerTextColor, fontSize: screenSizeRatio * 0.025),
             ),
           ),

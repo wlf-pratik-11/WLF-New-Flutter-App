@@ -26,37 +26,27 @@ AppBar commonAppbar(String title, {bool? centerTitle, List<Widget>? actions}) {
     centerTitle: centerTitle ?? false,
     title: Text(
       title,
-      style: TextStyle(
-          fontSize: screenSizeRatio * 0.036,
-          fontWeight: FontWeight.bold,
-          color: Colors.white),
+      style: TextStyle(fontSize: screenSizeRatio * 0.036, fontWeight: FontWeight.bold, color: Colors.white),
     ),
   );
 }
 
-Widget commonElevatedButton(
-    {required String title, required Function? onPressed()}) {
+Widget commonElevatedButton({required String title, required Function? onPressed(), Color? bagColor, Color? fontColors}) {
   return ElevatedButton(
       onPressed: onPressed,
       style: ElevatedButton.styleFrom(
-          backgroundColor: MyColors.mainColor,
-          shape: RoundedRectangleBorder(
-              borderRadius: BorderRadiusDirectional.circular(5))),
+          backgroundColor: bagColor ?? MyColors.mainColor,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadiusDirectional.circular(5))),
       child: Text(
         title,
         style: TextStyle(
-            fontWeight: FontWeight.bold,
-            color: MyColors.buttonFontColor,
-            fontSize: elevatedButtonFontSize),
+            fontWeight: FontWeight.bold, color: fontColors ?? MyColors.buttonFontColor, fontSize: elevatedButtonFontSize),
       ));
 }
 
 TextStyle paginationListViewItemTextStyle() {
   return TextStyle(
-      color: Colors.white,
-      fontSize: screenSizeRatio * 0.025,
-      fontWeight: FontWeight.bold,
-      overflow: TextOverflow.ellipsis);
+      color: Colors.white, fontSize: screenSizeRatio * 0.025, fontWeight: FontWeight.bold, overflow: TextOverflow.ellipsis);
 }
 
 Widget textPlaceHolderShimmerEffect() {
@@ -65,18 +55,13 @@ Widget textPlaceHolderShimmerEffect() {
       highlightColor: Colors.white10,
       enabled: true,
       child: Container(
-        decoration: BoxDecoration(
-            borderRadius: BorderRadiusDirectional.circular(5),
-            color: Colors.white10),
+        decoration: BoxDecoration(borderRadius: BorderRadiusDirectional.circular(5), color: Colors.white10),
         width: screenSizeRatio * 0.25,
         height: screenSizeRatio * 0.02,
       ));
 }
 
-Widget commonElevatedIconButton(
-    {required String title,
-    required Function? onPressed(),
-    required Widget leading}) {
+Widget commonElevatedIconButton({required String title, required Function? onPressed(), required Widget leading}) {
   return SizedBox(
     width: double.maxFinite,
     child: ElevatedButton.icon(
@@ -84,14 +69,10 @@ Widget commonElevatedIconButton(
         onPressed: onPressed,
         style: ElevatedButton.styleFrom(
             backgroundColor: MyColors.lightBlue,
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadiusDirectional.circular(5))),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadiusDirectional.circular(5))),
         label: Text(
           title,
-          style: TextStyle(
-              fontWeight: FontWeight.bold,
-              color: MyColors.darkBlue,
-              fontSize: screenSizeRatio * 0.03),
+          style: TextStyle(fontWeight: FontWeight.bold, color: MyColors.darkBlue, fontSize: screenSizeRatio * 0.03),
         )),
   );
 }
@@ -99,28 +80,33 @@ Widget commonElevatedIconButton(
 Widget inputField(String fieldName, TextEditingController controller,
     {Function(String value)? validator,
     bool showEyeIcon = false,
+    Widget? prefix,
     bool? isPassword,
     Function()? onPressed,
+    Function()? onChanged,
+    int? maxLength,
     bool? isNumber,
     bool? readOnly,
     Function()? onTap}) {
   return Padding(
-    padding: const EdgeInsets.only(right: 20, left: 20, top: 15, bottom: 15),
+    padding: EdgeInsets.symmetric(horizontal: screenSizeRatio * 0.04, vertical: screenSizeRatio * 0.02),
     child: TextFormField(
+      onChanged: (value) {
+        return onChanged?.call();
+      },
       onTap: () {
         return onTap?.call();
       },
       readOnly: readOnly ?? false,
       obscureText: isPassword ?? false,
       controller: controller,
-      keyboardType:
-          isNumber ?? false ? TextInputType.number : TextInputType.text,
-      maxLength: isNumber ?? false ? 10 : null,
+      keyboardType: isNumber ?? false ? TextInputType.number : TextInputType.text,
+      maxLength: isNumber ?? false ? maxLength : null,
       decoration: InputDecoration(
+        prefixIcon: prefix,
         label: Text(
           fieldName,
-          style:
-              TextStyle(color: Colors.black, fontSize: screenSizeRatio * 0.03),
+          style: TextStyle(color: Colors.black, fontSize: screenSizeRatio * 0.03),
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(15),

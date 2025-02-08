@@ -68,8 +68,23 @@ class StringValues {
 
   static String firebaseCrudScreen = "Firebase Crud Screen";
   static String addToCart = "Add To Cart";
+  static String freeDelivery = "Free Delivery.!!";
+  static String yearWarranty = "1 Year Warranty";
+  static String topBrand = "Top Brand";
+  static String inStock = "In Stock";
+  static String stockOut = "Stock Out";
 
   //Firebase Add Phone Screen
 
   static String addPhoneDetails = "Add Phone Details";
+  static String phoneName = "Phone Name";
+  static String price = "Price";
+  static String offerTitle = "Offer Title";
+  static String offerDescription = "Offer Description";
+  static String offerPercentage = "Offer Percentage";
+  static String offerPrice = "Offer Price";
+  static String submitData = "Submit Data";
+  static String stockDetail = "Stock Detail";
+  static String variant = "Variant's";
+  static String offerActive = "Offer Active ?";
 }
