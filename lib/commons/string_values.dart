@@ -73,6 +73,8 @@ class StringValues {
   static String topBrand = "Top Brand";
   static String inStock = "In Stock";
   static String stockOut = "Stock Out";
+  static String areYouWantToDelete = "Are you want to Delete.!!";
+  static String delete = "Delete";
 
   //Firebase Add Phone Screen
 
@@ -87,4 +89,5 @@ class StringValues {
   static String stockDetail = "Stock Detail";
   static String variant = "Variant's";
   static String offerActive = "Offer Active ?";
+  static String imageURL = "Image URL";
 }
