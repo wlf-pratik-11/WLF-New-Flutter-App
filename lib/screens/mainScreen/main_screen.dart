@@ -7,6 +7,7 @@ import 'package:wlf_new_flutter_app/screens/paginationScreen/pagination_screen.d
 import 'package:wlf_new_flutter_app/screens/tabBarScreen/tabbar_screen.dart';
 
 import '../../commons/DrawerDl.dart';
+import '../googleMapScreen/location_detail_screen.dart';
 import '../selectImageFronCameraAndGallery/pick_image_camera_gallery.dart';
 import 'main_screen_bloc.dart';
 
@@ -32,6 +33,7 @@ class _MainScreenState extends State<MainScreen> {
     DrawerDl(PickImageCameraGallery(), StringValues.pickImageFromCameraAndGalleryDemo),
     DrawerDl(PaginationScreen(), StringValues.paginationDemo),
     DrawerDl(FirebaseCrudScreen(), StringValues.firebaseCrudDemo),
+    DrawerDl(LocationDetailScreen(), StringValues.googleMap),
   ];
 
   @override

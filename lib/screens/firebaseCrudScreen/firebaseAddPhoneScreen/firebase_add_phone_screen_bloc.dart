@@ -1,15 +1,12 @@
-import 'dart:convert';
-
 import 'package:firebase_database/firebase_database.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart';
-import 'package:wlf_new_flutter_app/commons/common_functions.dart';
 
+import '../../../commons/common_functions.dart';
+import '../../../commons/my_colors.dart';
 import 'firebase_add_phone_screen_dl.dart';
 
 class FirebaseAddPhoneScreenBloc {
-
   DatabaseReference dbRef = FirebaseDatabase.instance.ref("WLFFlutterNewApp");
 
   final formKey = GlobalKey<FormState>();
@@ -33,39 +30,54 @@ class FirebaseAddPhoneScreenBloc {
     currentVariantListController.sink.add(currentVariants);
   }
 
-  Future<void> saveData(BuildContext context,{String? itemKey}) async {
+  Future<void> saveData(BuildContext context, {String? itemKey}) async {
+    currentVariants.sort(
+      (a, b) {
+        int element1 = int.parse(a.replaceAll(" GB", "").replaceAll(" TB", ""));
+        int element2 = int.parse(b.replaceAll(" GB", "").replaceAll(" TB", ""));
+
+        return element1.compareTo(element2);
+      },
+    );
+
+    String isTB = variants.firstWhere((String element) {
+      return element.contains("TB");
+    });
+
+    if (isTB.trim().isNotEmpty) {
+      variants.remove(isTB);
+      variants.add(isTB);
+    }
+
     FirebaseAddPhoneScreenDl phoneData = FirebaseAddPhoneScreenDl(
         phoneName: phoneNameController.text,
         imgURL: imgUrlController.text,
         price: priceController.text,
-        inStock: switchValueController.value,
+        inStock: radioSelectedValueController.value == 1 ? true : false,
         storageVariant: currentVariants,
         inOffer: switchValueController.value,
         offerTitle: offerTitleController.text,
         offerDescription: offerDescController.text,
         offerPercentage: offerPercentageController.text,
-        offerPrice: offerPrice.value.toString()
-    );
+        offerPrice: offerPrice.value.toString());
 
-    if(itemKey!=null){
-      await dbRef
-          .child(itemKey??"")
-          .update(phoneData.toJson())
-          .then(
-            (value) {
+    if (itemKey != null) {
+      await dbRef.child(itemKey ?? "").update(phoneData.toJson()).then(
+        (value) {
           var snakBar = SnackBar(
             content: Text(
-              "Record Updeted Successfully..!!",
-              style: TextStyle(color: Colors.white, fontSize: screenSizeRatio*0.03, fontWeight: FontWeight.bold),
+              "Record Updated Successfully..!!",
+              style: TextStyle(color: MyColors.darkBlue, fontSize: screenSizeRatio * 0.025, fontWeight: FontWeight.bold),
             ),
-            backgroundColor: Colors.black,
+            backgroundColor: MyColors.lightBlue,
           );
-          if(context.mounted) {
+          if (context.mounted) {
             ScaffoldMessenger.of(context).showSnackBar(snakBar);
+            Navigator.pop(context);
           }
         },
       );
-    }else{
+    } else {
       DateTime now = DateTime.now();
       String key = "${now.year}${now.month}${now.day}${now.microsecond}";
 
@@ -73,13 +85,15 @@ class FirebaseAddPhoneScreenBloc {
         var snakBar = SnackBar(
           content: Text(
             "Record Saved Successfully..!!",
-            style: TextStyle(color: Colors.white, fontSize: screenSizeRatio*0.03, fontWeight: FontWeight.bold),
+            style: TextStyle(color: MyColors.darkBlue, fontSize: screenSizeRatio * 0.02, fontWeight: FontWeight.bold),
           ),
-          backgroundColor: Colors.black,
+          backgroundColor: MyColors.lightBlue,
         );
-        if(context.mounted) {
+        if (context.mounted) {
           ScaffoldMessenger.of(context).showSnackBar(snakBar);
-        };
+          Navigator.pop(context);
+        }
+        ;
       }).catchError((error) {
         print("Failed to save data: $error");
       });
@@ -89,36 +103,51 @@ class FirebaseAddPhoneScreenBloc {
   void getData(String itemKey) async {
     DatabaseEvent event = await dbRef.child("$itemKey").once();
     DataSnapshot snapshot = event.snapshot;
-    print("Map Data =======================>>>>>>>>>>>>>>>${snapshot.value}");
+    final data = FirebaseAddPhoneScreenDl.fromJson(snapshot.value);
+    phoneNameController.text = data.phoneName.toString();
+    imgUrlController.text = data.imgURL.toString();
+    priceController.text = data.price.toString();
+    radioSelectedValueController.sink.add(data.inStock == true ? 1 : 0);
+    currentVariants.addAll(data.storageVariant ??
+        [].map(
+          (e) {
+            print("data.storageVariant:::::::::::::::::${e}");
+            return e;
+          },
+        ));
+    currentVariantListController.sink.add(currentVariants);
+    switchValueController.sink.add(data.inOffer ?? false);
+    offerTitleController.text = data.offerTitle.toString();
+    offerDescController.text = data.offerDescription.toString();
+    offerPercentageController.text = data.offerPercentage.toString();
+    offerPrice.sink.add(int.parse(data.offerPrice.toString()));
   }
 
-  String phoneNameValidator(String value) {
+  String? phoneNameValidator(String value) {
     if (value.isEmpty) {
       return "Enter Phone Name";
     } else if (value.length < 5 || value.length > 50) {
       return "Enter Valid Phone Name";
     } else {
-      return "";
+      return null;
     }
   }
 
-  String priceValidator(String value) {
+  String? priceValidator(String value) {
     if (value.isEmpty) {
       return "Enter Phone Price";
-    } else if (value.isEmpty || value.length > 6) {
-      return "Enter Valid Phone Price";
     } else {
-      return "";
+      return null;
     }
   }
 
-  String imgUrlValidator(String value) {
+  String? imgUrlValidator(String value) {
     if (value.isEmpty) {
       return "Enter Image URL";
-    } else if (value.isEmpty || value.length >400) {
+    } else if (value.length > 400) {
       return "Enter Valid Image URL";
     } else {
-      return "";
+      return null;
     }
   }
 
@@ -130,40 +159,40 @@ class FirebaseAddPhoneScreenBloc {
     }
   }
 
-  String offerTitleValidator(String value) {
+  String? offerTitleValidator(String value) {
     if (switchValueController.value == true) {
       if (value.isEmpty) {
         return "Enter Offer Title";
-      } else if (value.isEmpty || value.length > 50) {
+      } else if (value.length > 50) {
         return "Enter Valid Offer Title";
       } else {
-        return "";
+        return null;
       }
     }
-    return "";
+    return null;
   }
 
-  String offerDescValidator(String value) {
+  String? offerDescValidator(String value) {
     if (switchValueController.value == true) {
       if (value.isEmpty) {
         return "Enter Offer Description";
-      } else if (value.isEmpty || value.length > 50) {
+      } else if (value.length > 50) {
         return "Enter Valid Offer Description";
       } else {
-        return "";
+        return null;
       }
     }
-    return "";
+    return null;
   }
 
-  String offerPercentageValidator(String value) {
+  String? offerPercentageValidator(String value) {
     if (switchValueController.value == true) {
       if (value.isEmpty) {
         return "Enter Offer Title";
-      } else if (value.isEmpty || value.length > 50) {
+      } else if (value.length > 50) {
         return "Enter Valid Offer Title";
       } else {
-        return "";
+        return null;
       }
     }
     return "";

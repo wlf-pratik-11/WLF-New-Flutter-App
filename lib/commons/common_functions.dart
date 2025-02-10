@@ -144,3 +144,19 @@ Widget inputField(String fieldName, TextEditingController controller,
     ),
   );
 }
+
+navigatorPush(BuildContext context, Widget screenName) {
+  return Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => screenName,
+      ));
+}
+
+navigatorPop(BuildContext context) {
+  return Navigator.pop(context);
+}
+
+// textStyleForBodyText() {
+//   return TextStyle();
+// }

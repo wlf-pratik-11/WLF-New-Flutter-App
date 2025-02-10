@@ -2,11 +2,14 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_database/ui/firebase_animated_list.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:wlf_new_flutter_app/commons/common_functions.dart';
 import 'package:wlf_new_flutter_app/commons/my_colors.dart';
 import 'package:wlf_new_flutter_app/commons/string_values.dart';
 import 'package:wlf_new_flutter_app/screens/firebaseCrudScreen/firebaseAddPhoneScreen/firebase_add_phone_screen.dart';
 import 'package:wlf_new_flutter_app/screens/firebaseCrudScreen/firebase_crud_screen_bloc.dart';
+
+import 'firebase_crud_screen_dl.dart';
 
 class FirebaseCrudScreen extends StatefulWidget {
   const FirebaseCrudScreen({super.key});
@@ -17,6 +20,7 @@ class FirebaseCrudScreen extends StatefulWidget {
 
 class _FirebaseCrudScreenState extends State<FirebaseCrudScreen> {
   late FirebaseCrudScreenBloc _bloc;
+  FirebaseCrudScreenDl screenData = FirebaseCrudScreenDl();
 
   @override
   void didChangeDependencies() {
@@ -50,31 +54,53 @@ class _FirebaseCrudScreenState extends State<FirebaseCrudScreen> {
       physics: BouncingScrollPhysics(),
       query: _bloc.getFirebaseRef(),
       itemBuilder: (context, snapshot, animation, index) {
+        screenData = FirebaseCrudScreenDl.fromJson(snapshot.value);
         return Dismissible(
-            key: Key(snapshot.key ?? 'item_$index'),
+          background: Container(
+            padding: EdgeInsets.symmetric(horizontal: screenSizeRatio * 0.025),
+            alignment: Alignment.centerLeft,
+            color: MyColors.lightBlue,
+            child: Row(
+              children: [
+                Icon(
+                  Icons.delete_outline,
+                  size: screenSizeRatio * 0.04,
+                  color: MyColors.darkBlue,
+                ),
+                Text(
+                  StringValues.delete,
+                  style: TextStyle(color: MyColors.darkBlue, fontWeight: FontWeight.bold, fontSize: screenSizeRatio * 0.035),
+                )
+              ],
+            ),
+          ),
+          key: UniqueKey(),
           direction: DismissDirection.startToEnd,
-          confirmDismiss:(direction) {
-            return _bloc.deleteItemFromList(snapshot.key??"",context);
-          } ,
-            child:
-                InkWell(child: cardForFirebaseAnimatedList(snapshot: snapshot, index: index),onLongPress: () {
-                 Navigator.push(context, MaterialPageRoute(builder: (context) => FirebaseAddPhoneScreen(itemKey: snapshot.key,),));
-                },),
+          confirmDismiss: (direction) async {
+            return await _bloc.deleteItemFromList(snapshot.key ?? "", context);
+          },
+          child: InkWell(
+            child: cardForFirebaseAnimatedList(snapshot: snapshot, index: index, screenData: screenData),
+            onLongPress: () {
+              navigatorPush(
+                  context,
+                  FirebaseAddPhoneScreen(
+                    itemKey: snapshot.key,
+                  ));
+            },
+          ),
         );
       },
     );
   }
 
   Widget cardForFirebaseAnimatedList(
-      {required DataSnapshot snapshot, required int index}) {
+      {required DataSnapshot snapshot, required int index, required FirebaseCrudScreenDl screenData}) {
     return Card(
       color: Colors.white,
       elevation: 5,
-      shape: RoundedRectangleBorder(
-          borderRadius: BorderRadiusDirectional.circular(5)),
-      margin: EdgeInsets.symmetric(
-          vertical: screenSizeRatio * 0.01,
-          horizontal: screenSizeRatio * 0.015),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadiusDirectional.circular(5)),
+      margin: EdgeInsets.symmetric(vertical: screenSizeRatio * 0.01, horizontal: screenSizeRatio * 0.015),
       child: Padding(
         padding: EdgeInsets.all(screenSizeRatio * 0.02),
         child: Row(
@@ -82,15 +108,15 @@ class _FirebaseCrudScreenState extends State<FirebaseCrudScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.max,
           children: [
-            cardLeftPart(snapshot: snapshot, index: index),
-            cardRightPart(snapshot: snapshot, index: index)
+            cardLeftPart(snapshot: snapshot, index: index, screenData: screenData),
+            cardRightPart(snapshot: snapshot, index: index, screenData: screenData)
           ],
         ),
       ),
     );
   }
 
-  Widget cardLeftPart({required DataSnapshot snapshot, required int index}) {
+  Widget cardLeftPart({required DataSnapshot snapshot, required int index, required FirebaseCrudScreenDl screenData}) {
     return Expanded(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -98,7 +124,7 @@ class _FirebaseCrudScreenState extends State<FirebaseCrudScreen> {
         mainAxisSize: MainAxisSize.max,
         children: [
           Image.network(
-            snapshot.child("imgUrl").value.toString(),
+            screenData.imgURL.toString(),
             height: screenSizeRatio * 0.25,
             width: screenSizeRatio * 0.25,
             frameBuilder: (context, child, frame, wasSynchronouslyLoaded) {
@@ -119,15 +145,9 @@ class _FirebaseCrudScreenState extends State<FirebaseCrudScreen> {
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              addOnInfoRow(
-                  assetImagePath: "assets/images/localshipping.png",
-                  description: StringValues.freeDelivery),
-              addOnInfoRow(
-                  assetImagePath: "assets/images/verified.png",
-                  description: StringValues.yearWarranty),
-              addOnInfoRow(
-                  assetImagePath: "assets/images/brand.png",
-                  description: StringValues.topBrand),
+              addOnInfoRow(assetImagePath: "assets/images/localshipping.png", description: StringValues.freeDelivery),
+              addOnInfoRow(assetImagePath: "assets/images/verified.png", description: StringValues.yearWarranty),
+              addOnInfoRow(assetImagePath: "assets/images/brand.png", description: StringValues.topBrand),
             ],
           )
         ],
@@ -135,7 +155,7 @@ class _FirebaseCrudScreenState extends State<FirebaseCrudScreen> {
     );
   }
 
-  Widget cardRightPart({required DataSnapshot snapshot, required int index}) {
+  Widget cardRightPart({required DataSnapshot snapshot, required int index, required FirebaseCrudScreenDl screenData}) {
     return Expanded(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -150,38 +170,28 @@ class _FirebaseCrudScreenState extends State<FirebaseCrudScreen> {
                 Expanded(
                   flex: 3,
                   child: Text(
-                    snapshot.child("name").value.toString(),
+                    screenData.phoneName.toString(),
                     softWrap: true,
                     maxLines: 3,
                     overflow: TextOverflow.fade,
-                    style: TextStyle(
-                        fontSize: screenSizeRatio * 0.03,
-                        fontWeight: FontWeight.w700,
-                        color: MyColors.mainColor),
+                    style: TextStyle(fontSize: screenSizeRatio * 0.03, fontWeight: FontWeight.w700, color: MyColors.mainColor),
                   ),
                 ),
                 Container(
-                  margin:
-                      EdgeInsets.symmetric(horizontal: screenSizeRatio * 0.02),
+                  margin: EdgeInsets.symmetric(horizontal: screenSizeRatio * 0.02),
                   decoration: BoxDecoration(
-                      color: snapshot.child("inStock").value == true
+                      color: screenData.inStock == true
                           ? CupertinoColors.systemGreen.withOpacity(0.2)
                           : CupertinoColors.destructiveRed.withOpacity(0.2),
                       shape: BoxShape.rectangle,
                       borderRadius: BorderRadiusDirectional.circular(5)),
                   child: Center(
                     child: Padding(
-                      padding: EdgeInsets.symmetric(
-                          vertical: screenSizeRatio * 0.008,
-                          horizontal: screenSizeRatio * 0.009),
+                      padding: EdgeInsets.symmetric(vertical: screenSizeRatio * 0.008, horizontal: screenSizeRatio * 0.009),
                       child: Text(
-                        snapshot.child("inStock").value == true
-                            ? StringValues.inStock
-                            : StringValues.stockOut,
+                        screenData.inStock == true ? StringValues.inStock : StringValues.stockOut,
                         style: TextStyle(
-                            color: snapshot.child("inStock").value == true
-                                ? Colors.green
-                                : Colors.red,
+                            color: screenData.inStock == true ? Colors.green : Colors.red,
                             fontSize: screenSizeRatio * 0.02,
                             fontWeight: FontWeight.bold),
                       ),
@@ -193,46 +203,54 @@ class _FirebaseCrudScreenState extends State<FirebaseCrudScreen> {
           ),
           Padding(
             padding: EdgeInsets.symmetric(vertical: screenSizeRatio * 0.01),
-            child: Row(
-              children: [
-                Icon(
-                  Icons.currency_rupee,
-                  color: MyColors.mainColor,
-                  size: screenSizeRatio * 0.03,
-                ),
-                Text(
-                  snapshot.child("price").value.toString(),
-                  style: TextStyle(
-                    fontSize: screenSizeRatio * 0.03,
-                    fontWeight: FontWeight.w500,
-                    color: MyColors.mainColor,
-                  ),
-                ),
-              ],
+            child: Text(
+              "₹ ${screenData.price.toString()}",
+              style: TextStyle(
+                fontSize: screenSizeRatio * 0.03,
+                fontWeight: FontWeight.w500,
+                color: MyColors.mainColor,
+              ),
             ),
           ),
+          RichText(
+              overflow: TextOverflow.fade,
+              text: TextSpan(children: [
+                TextSpan(
+                    style: GoogleFonts.nunito(
+                        textStyle: TextStyle(
+                      fontSize: screenSizeRatio * 0.025,
+                      fontWeight: FontWeight.w700,
+                      color: Colors.orange,
+                    )),
+                    text: "Offer price : "),
+                TextSpan(
+                    style: GoogleFonts.nunito(
+                        textStyle: TextStyle(
+                      fontSize: screenSizeRatio * 0.025,
+                      fontWeight: FontWeight.w700,
+                      color: Colors.orange,
+                    )),
+                    text: "₹ ${screenData.offerPrice.toString()}"),
+              ])),
           Padding(
             padding: EdgeInsets.symmetric(vertical: screenSizeRatio * 0.01),
             child: Wrap(
-              children: [
-                variantContainer("64 GB"),
-                variantContainer("128 GB"),
-                variantContainer("256 GB"),
-                variantContainer("512 GB"),
-                variantContainer("1 TB"),
-              ],
+              children: screenData.storageVariant?.map(
+                    (e) {
+                      return variantContainer(e);
+                    },
+                  ).toList() ??
+                  [],
             ),
           ),
           Padding(
             padding: EdgeInsets.symmetric(vertical: screenSizeRatio * 0.01),
             child: Text(
-              snapshot.child("inOffer").value == true
-                  ? "Spacial offer ${snapshot.child("offer").value}% off"
+              screenData.inOffer == true
+                  ? "${screenData.offerTitle} ${screenData.offerDescription} ${screenData.offerPercentage}%"
                   : "Get the Best Deals at Unbeatable Prices!",
-              style: TextStyle(
-                  fontWeight: FontWeight.w700,
-                  color: MyColors.offerTextColor,
-                  fontSize: screenSizeRatio * 0.025),
+              style: TextStyle(fontWeight: FontWeight.w700, color: MyColors.offerTextColor, fontSize: screenSizeRatio * 0.025),
+              maxLines: 5,
             ),
           ),
           Padding(
@@ -251,18 +269,13 @@ class _FirebaseCrudScreenState extends State<FirebaseCrudScreen> {
     );
   }
 
-  Widget addOnInfoRow(
-      {required String assetImagePath, required String description}) {
+  Widget addOnInfoRow({required String assetImagePath, required String description}) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
         Container(
-          padding: EdgeInsets.symmetric(
-              horizontal: screenSizeRatio * 0.004,
-              vertical: screenSizeRatio * 0.004),
-          margin: EdgeInsets.symmetric(
-              horizontal: screenSizeRatio * 0.01,
-              vertical: screenSizeRatio * 0.005),
+          padding: EdgeInsets.symmetric(horizontal: screenSizeRatio * 0.004, vertical: screenSizeRatio * 0.004),
+          margin: EdgeInsets.symmetric(horizontal: screenSizeRatio * 0.01, vertical: screenSizeRatio * 0.005),
           decoration: BoxDecoration(
             border: Border.all(color: MyColors.darkBlue),
             borderRadius: BorderRadiusDirectional.circular(100),
@@ -277,10 +290,7 @@ class _FirebaseCrudScreenState extends State<FirebaseCrudScreen> {
         ),
         Text(
           description,
-          style: TextStyle(
-              color: MyColors.darkBlue,
-              fontSize: screenSizeRatio * 0.025,
-              fontWeight: FontWeight.w700),
+          style: TextStyle(color: MyColors.darkBlue, fontSize: screenSizeRatio * 0.025, fontWeight: FontWeight.w700),
         )
       ],
     );
@@ -288,16 +298,10 @@ class _FirebaseCrudScreenState extends State<FirebaseCrudScreen> {
 
   Widget variantContainer(String varieant) {
     return Container(
-      margin: EdgeInsets.symmetric(
-          horizontal: screenSizeRatio * 0.008,
-          vertical: screenSizeRatio * 0.005),
-      padding: EdgeInsets.symmetric(
-          vertical: screenSizeRatio * 0.006,
-          horizontal: screenSizeRatio * 0.012),
-      decoration: BoxDecoration(
-          color: Colors.black54,
-          shape: BoxShape.rectangle,
-          borderRadius: BorderRadiusDirectional.circular(5)),
+      margin: EdgeInsets.symmetric(horizontal: screenSizeRatio * 0.008, vertical: screenSizeRatio * 0.005),
+      padding: EdgeInsets.symmetric(vertical: screenSizeRatio * 0.006, horizontal: screenSizeRatio * 0.012),
+      decoration:
+          BoxDecoration(color: Colors.black54, shape: BoxShape.rectangle, borderRadius: BorderRadiusDirectional.circular(5)),
       child: Text(
         varieant,
         style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),

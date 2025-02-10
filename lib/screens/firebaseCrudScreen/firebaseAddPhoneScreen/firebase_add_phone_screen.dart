@@ -6,7 +6,7 @@ import 'package:wlf_new_flutter_app/screens/firebaseCrudScreen/firebaseAddPhoneS
 
 class FirebaseAddPhoneScreen extends StatefulWidget {
   final itemKey;
-  const FirebaseAddPhoneScreen({this.itemKey,super.key});
+  const FirebaseAddPhoneScreen({this.itemKey, super.key});
 
   @override
   State<FirebaseAddPhoneScreen> createState() => _FirebaseAddPhoneScreenState();
@@ -18,7 +18,7 @@ class _FirebaseAddPhoneScreenState extends State<FirebaseAddPhoneScreen> {
   @override
   void didChangeDependencies() {
     _bloc = FirebaseAddPhoneScreenBloc();
-    widget.itemKey!=null ? _bloc.getData(widget.itemKey):null;
+    widget.itemKey != null ? _bloc.getData(widget.itemKey) : null;
     // TODO: implement didChangeDependencies
     super.didChangeDependencies();
   }
@@ -26,13 +26,13 @@ class _FirebaseAddPhoneScreenState extends State<FirebaseAddPhoneScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: commonAppbar(StringValues.addPhoneDetails),
+      appBar: commonAppbar(widget.itemKey != null ? StringValues.updatePhoneDetails : StringValues.addPhoneDetails),
       body: _buildBody(),
     );
   }
 
   _buildBody() {
-    print("Iyem KEyyyyy is :::::::::::::::::::::${widget.itemKey}");
+    print("Item KEyyyyy is :::::::::::::::::::::${widget.itemKey}");
     return Form(
       key: _bloc.formKey,
       child: Column(
@@ -59,9 +59,7 @@ class _FirebaseAddPhoneScreenState extends State<FirebaseAddPhoneScreen> {
                               return _bloc.phoneNameValidator(value);
                             },
                           ),
-                          inputField(
-                              StringValues.imageURL, _bloc.imgUrlController,
-                              validator: (value) {
+                          inputField(StringValues.imageURL, _bloc.imgUrlController, validator: (value) {
                             return _bloc.imgUrlValidator(value);
                           },
                               prefix: Icon(
@@ -124,8 +122,7 @@ class _FirebaseAddPhoneScreenState extends State<FirebaseAddPhoneScreen> {
                                   return _bloc.offerPercentageValidator(value);
                                 },
                                 isNumber: true),
-                          if (switchValueSnapshot.data == true)
-                            offerDetailField()
+                          if (switchValueSnapshot.data == true) offerDetailField()
                         ],
                       ),
                     );
@@ -143,8 +140,7 @@ class _FirebaseAddPhoneScreenState extends State<FirebaseAddPhoneScreen> {
         stream: _bloc.radioSelectedValueController,
         builder: (context, selectedValueSnapshot) {
           return Padding(
-            padding: EdgeInsets.only(
-                left: screenSizeRatio * 0.04, top: screenSizeRatio * 0.01),
+            padding: EdgeInsets.only(left: screenSizeRatio * 0.04, top: screenSizeRatio * 0.01),
             child: Row(
               mainAxisSize: MainAxisSize.max,
               mainAxisAlignment: MainAxisAlignment.start,
@@ -163,8 +159,7 @@ class _FirebaseAddPhoneScreenState extends State<FirebaseAddPhoneScreen> {
                 ),
                 Text(
                   StringValues.inStock,
-                  style: TextStyle(
-                      fontSize: screenSizeRatio * 0.025, color: Colors.green),
+                  style: TextStyle(fontSize: screenSizeRatio * 0.025, color: Colors.green),
                 ),
                 Radio(
                   value: 0,
@@ -176,8 +171,7 @@ class _FirebaseAddPhoneScreenState extends State<FirebaseAddPhoneScreen> {
                 ),
                 Text(
                   StringValues.stockOut,
-                  style: TextStyle(
-                      fontSize: screenSizeRatio * 0.025, color: Colors.red),
+                  style: TextStyle(fontSize: screenSizeRatio * 0.025, color: Colors.red),
                 ),
               ],
             ),
@@ -187,10 +181,7 @@ class _FirebaseAddPhoneScreenState extends State<FirebaseAddPhoneScreen> {
 
   Widget variantOfPhoneSection() {
     return Padding(
-      padding: EdgeInsets.only(
-          top: screenSizeRatio * 0.02,
-          bottom: screenSizeRatio * 0.01,
-          left: screenSizeRatio * 0.04),
+      padding: EdgeInsets.only(top: screenSizeRatio * 0.02, bottom: screenSizeRatio * 0.01, left: screenSizeRatio * 0.04),
       child: Row(
         mainAxisSize: MainAxisSize.max,
         mainAxisAlignment: MainAxisAlignment.start,
@@ -220,10 +211,7 @@ class _FirebaseAddPhoneScreenState extends State<FirebaseAddPhoneScreen> {
                     return snapshot.data == true
                         ? Text(
                             "Choose Phone Variant.!!",
-                            style: TextStyle(
-                                color: Colors.red,
-                                fontSize: screenSizeRatio * 0.02,
-                                fontWeight: FontWeight.w200),
+                            style: TextStyle(color: Colors.red, fontSize: screenSizeRatio * 0.02, fontWeight: FontWeight.w200),
                           )
                         : Container();
                   },
@@ -244,16 +232,10 @@ class _FirebaseAddPhoneScreenState extends State<FirebaseAddPhoneScreen> {
             splashFactory: NoSplash.splashFactory,
             child: Container(
               decoration: BoxDecoration(
-                  color: snapshot.data != null
-                      ? (snapshot.data!.contains(item)
-                          ? MyColors.lightBlue
-                          : null)
-                      : null,
+                  color: snapshot.data != null ? (snapshot.data!.contains(item) ? MyColors.lightBlue : null) : null,
                   border: Border.all(color: MyColors.lightBlue, width: 3),
                   borderRadius: BorderRadiusDirectional.circular(10)),
-              padding: EdgeInsets.symmetric(
-                  horizontal: screenSizeRatio * 0.02,
-                  vertical: screenSizeRatio * 0.015),
+              padding: EdgeInsets.symmetric(horizontal: screenSizeRatio * 0.02, vertical: screenSizeRatio * 0.015),
               margin: EdgeInsets.symmetric(vertical: screenSizeRatio * 0.005),
               child: Text(
                 item,
@@ -275,8 +257,7 @@ class _FirebaseAddPhoneScreenState extends State<FirebaseAddPhoneScreen> {
 
   Widget offerActiveButton(AsyncSnapshot<bool> switchValueSnapshot) {
     return Padding(
-      padding: EdgeInsets.only(
-          left: screenSizeRatio * 0.04, top: screenSizeRatio * 0.015),
+      padding: EdgeInsets.only(left: screenSizeRatio * 0.04, top: screenSizeRatio * 0.015),
       child: Row(
         children: [
           Text(
@@ -301,12 +282,9 @@ class _FirebaseAddPhoneScreenState extends State<FirebaseAddPhoneScreen> {
     return Card(
       color: Colors.white,
       elevation: 5,
-      margin: EdgeInsets.symmetric(
-          vertical: screenSizeRatio * 0.02, horizontal: screenSizeRatio * 0.04),
+      margin: EdgeInsets.symmetric(vertical: screenSizeRatio * 0.02, horizontal: screenSizeRatio * 0.04),
       child: Padding(
-        padding: EdgeInsets.symmetric(
-            horizontal: screenSizeRatio * 0.02,
-            vertical: screenSizeRatio * 0.025),
+        padding: EdgeInsets.symmetric(horizontal: screenSizeRatio * 0.02, vertical: screenSizeRatio * 0.025),
         child: Row(
           children: [
             Image.asset(
@@ -314,14 +292,10 @@ class _FirebaseAddPhoneScreenState extends State<FirebaseAddPhoneScreen> {
               width: screenSizeRatio * 0.04,
             ),
             Padding(
-              padding:
-                  EdgeInsets.symmetric(horizontal: screenSizeRatio * 0.015),
+              padding: EdgeInsets.symmetric(horizontal: screenSizeRatio * 0.015),
               child: Text(
                 "${StringValues.offerPrice} : ",
-                style: TextStyle(
-                    color: Colors.black,
-                    fontWeight: FontWeight.bold,
-                    fontSize: screenSizeRatio * 0.03),
+                style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: screenSizeRatio * 0.03),
               ),
             ),
             StreamBuilder<int>(
@@ -330,9 +304,7 @@ class _FirebaseAddPhoneScreenState extends State<FirebaseAddPhoneScreen> {
                   return offerPriceSnapshot.data != 0
                       ? Text(
                           "${offerPriceSnapshot.data} ₹ 🥳",
-                          style: TextStyle(
-                              fontSize: screenSizeRatio * 0.04,
-                              fontWeight: FontWeight.bold),
+                          style: TextStyle(fontSize: screenSizeRatio * 0.04, fontWeight: FontWeight.bold),
                         )
                       : Container();
                 }),
@@ -344,9 +316,7 @@ class _FirebaseAddPhoneScreenState extends State<FirebaseAddPhoneScreen> {
 
   Widget submitDataButton() {
     return Container(
-      margin: EdgeInsets.symmetric(
-          vertical: screenSizeRatio * 0.025,
-          horizontal: screenSizeRatio * 0.04),
+      margin: EdgeInsets.symmetric(vertical: screenSizeRatio * 0.025, horizontal: screenSizeRatio * 0.04),
       width: double.maxFinite,
       height: screenSizeRatio * 0.08,
       child: commonElevatedButton(
@@ -354,8 +324,8 @@ class _FirebaseAddPhoneScreenState extends State<FirebaseAddPhoneScreen> {
         bagColor: MyColors.lightBlue,
         fontColors: MyColors.darkBlue,
         onPressed: () {
-          if(_bloc.validateForm()){
-            _bloc.saveData(context);
+          if (_bloc.validateForm()) {
+            _bloc.saveData(context, itemKey: widget.itemKey);
           }
           return null;
         },

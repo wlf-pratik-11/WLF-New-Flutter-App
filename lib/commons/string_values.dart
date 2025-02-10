@@ -79,6 +79,7 @@ class StringValues {
   //Firebase Add Phone Screen
 
   static String addPhoneDetails = "Add Phone Details";
+  static String updatePhoneDetails = "Update Phone Details";
   static String phoneName = "Phone Name";
   static String price = "Price";
   static String offerTitle = "Offer Title";
@@ -90,4 +91,14 @@ class StringValues {
   static String variant = "Variant's";
   static String offerActive = "Offer Active ?";
   static String imageURL = "Image URL";
+
+  //Google Map
+
+  static String googleMap = "Google Map";
+
+  //Location Detail Screen
+
+  static String myLocation = "My Current Location";
+  static String getCurrentLocation = "Get Current Location";
+  static String savedAddresses = "Saved addresses";
 }
