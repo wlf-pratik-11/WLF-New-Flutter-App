@@ -1,6 +1,7 @@
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart';
+import 'package:wlf_new_flutter_app/commons/string_values.dart';
 
 import '../../../commons/common_functions.dart';
 import '../../../commons/my_colors.dart';
@@ -23,16 +24,15 @@ class FirebaseAddPhoneScreenBloc {
   final offerTitleController = TextEditingController();
   final offerDescController = TextEditingController();
   final offerPercentageController = TextEditingController();
+
   List<String> variants = ["64 GB", "128 GB", "256 GB", "512 GB", "1 TB"];
   List<String> currentVariants = [];
 
-  addListData() {
-    currentVariantListController.sink.add(currentVariants);
-  }
+  addListData() => currentVariantListController.sink.add(currentVariants);
 
   Future<void> saveData(BuildContext context, {String? itemKey}) async {
     currentVariants.sort(
-      (a, b) {
+          (a, b) {
         int element1 = int.parse(a.replaceAll(" GB", "").replaceAll(" TB", ""));
         int element2 = int.parse(b.replaceAll(" GB", "").replaceAll(" TB", ""));
 
@@ -61,48 +61,24 @@ class FirebaseAddPhoneScreenBloc {
         offerPercentage: offerPercentageController.text,
         offerPrice: offerPrice.value.toString());
 
-    if (itemKey != null) {
-      await dbRef.child(itemKey ?? "").update(phoneData.toJson()).then(
-        (value) {
-          var snakBar = SnackBar(
-            content: Text(
-              "Record Updated Successfully..!!",
-              style: TextStyle(color: MyColors.darkBlue, fontSize: screenSizeRatio * 0.025, fontWeight: FontWeight.bold),
-            ),
-            backgroundColor: MyColors.lightBlue,
-          );
-          if (context.mounted) {
-            ScaffoldMessenger.of(context).showSnackBar(snakBar);
-            Navigator.pop(context);
-          }
-        },
-      );
-    } else {
-      DateTime now = DateTime.now();
-      String key = "${now.year}${now.month}${now.day}${now.microsecond}";
+    DateTime now = DateTime.now();
+    String key = "${now.year}${now.month}${now.day}${now.microsecond}";
 
-      await dbRef.child(key).set(phoneData.toJson()).then((_) {
-        var snakBar = SnackBar(
-          content: Text(
-            "Record Saved Successfully..!!",
-            style: TextStyle(color: MyColors.darkBlue, fontSize: screenSizeRatio * 0.02, fontWeight: FontWeight.bold),
-          ),
-          backgroundColor: MyColors.lightBlue,
-        );
-        if (context.mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(snakBar);
-          Navigator.pop(context);
-        }
-        ;
-      }).catchError((error) {
-        print("Failed to save data: $error");
-      });
-    }
+
+    final Future<void> operation = itemKey != null ?
+    dbRef.child(itemKey ?? "").update(phoneData.toJson()):
+    dbRef.child(key).set(phoneData.toJson());
+
+    await operation;
+    showSnakbar(context, itemKey != null ?  StringValues.updatedSuccessfully: StringValues.savedSuccessfully);
+    if(context.mounted) Navigator.pop(context);
   }
 
   void getData(String itemKey) async {
+
     DatabaseEvent event = await dbRef.child("$itemKey").once();
     DataSnapshot snapshot = event.snapshot;
+
     final data = FirebaseAddPhoneScreenDl.fromJson(snapshot.value);
     phoneNameController.text = data.phoneName.toString();
     imgUrlController.text = data.imgURL.toString();
@@ -111,7 +87,6 @@ class FirebaseAddPhoneScreenBloc {
     currentVariants.addAll(data.storageVariant ??
         [].map(
           (e) {
-            print("data.storageVariant:::::::::::::::::${e}");
             return e;
           },
         ));
@@ -214,5 +189,17 @@ class FirebaseAddPhoneScreenBloc {
       int offerPrice = price * perc ~/ 100;
       this.offerPrice.sink.add(price - offerPrice);
     }
+  }
+
+  showSnakbar(BuildContext context,String title){
+    if (!context.mounted) return;
+    var snakBar = SnackBar(
+      content: Text(
+        "Record Saved Successfully..!!",
+        style: TextStyle(color: MyColors.darkBlue, fontSize: screenSizeRatio * 0.02, fontWeight: FontWeight.bold),
+      ),
+      backgroundColor: MyColors.lightBlue,
+    );
+    ScaffoldMessenger.of(context).showSnackBar(snakBar);
   }
 }

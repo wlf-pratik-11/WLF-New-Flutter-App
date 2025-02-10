@@ -15,8 +15,7 @@ class FirebaseCrudScreenBloc {
   final orderPlaced = BehaviorSubject<bool>.seeded(false);
 
   Query getFirebaseRef() {
-    final firebaseReference = ref;
-    return firebaseReference;
+    return ref;
   }
 
   deleteItemFromList(String key, BuildContext context) async {
@@ -75,7 +74,7 @@ class FirebaseCrudScreenBloc {
     await ref.child(itemKey).remove().then((value) {
       var snakBar = SnackBar(
         content: Text(
-          "Deleted Successfully..!!",
+          StringValues.deletedSuccessfully,
           style: TextStyle(color: Colors.white, fontSize: screenSizeRatio * 0.03, fontWeight: FontWeight.bold),
         ),
         backgroundColor: Colors.black,

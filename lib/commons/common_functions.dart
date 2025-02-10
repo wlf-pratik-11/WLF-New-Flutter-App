@@ -157,6 +157,6 @@ navigatorPop(BuildContext context) {
   return Navigator.pop(context);
 }
 
-// textStyleForBodyText() {
-//   return TextStyle();
-// }
+spaceSymmetric({double? vertical,double? horizontal}){
+  return EdgeInsets.symmetric(vertical: screenSizeRatio * (vertical??0), horizontal: screenSizeRatio * (horizontal??0));
+}

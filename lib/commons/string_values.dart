@@ -75,6 +75,7 @@ class StringValues {
   static String stockOut = "Stock Out";
   static String areYouWantToDelete = "Are you want to Delete.!!";
   static String delete = "Delete";
+  static String getTheBestDeals = "Get the Best Deals at Unbeatable Prices!";
 
   //Firebase Add Phone Screen
 
@@ -91,6 +92,13 @@ class StringValues {
   static String variant = "Variant's";
   static String offerActive = "Offer Active ?";
   static String imageURL = "Image URL";
+  static String choosePhoneVariant = "Choose Phone Variant.!!";
+
+  //Firebase add phone screen bloc
+
+  static String deletedSuccessfully = "Deleted Successfully..!!";
+  static String savedSuccessfully = "Record Saved Successfully..!!";
+  static String updatedSuccessfully = "Record Saved Successfully..!!";
 
   //Google Map
 
@@ -100,5 +108,6 @@ class StringValues {
 
   static String myLocation = "My Current Location";
   static String getCurrentLocation = "Get Current Location";
+  static String setLocationFromMap = "Set location from map";
   static String savedAddresses = "Saved addresses";
 }

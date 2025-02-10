@@ -6,6 +6,7 @@ import 'package:wlf_new_flutter_app/screens/firebaseCrudScreen/firebaseAddPhoneS
 
 class FirebaseAddPhoneScreen extends StatefulWidget {
   final itemKey;
+
   const FirebaseAddPhoneScreen({this.itemKey, super.key});
 
   @override
@@ -26,13 +27,14 @@ class _FirebaseAddPhoneScreenState extends State<FirebaseAddPhoneScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: commonAppbar(widget.itemKey != null ? StringValues.updatePhoneDetails : StringValues.addPhoneDetails),
+      appBar: commonAppbar(widget.itemKey != null
+          ? StringValues.updatePhoneDetails
+          : StringValues.addPhoneDetails),
       body: _buildBody(),
     );
   }
 
-  _buildBody() {
-    print("Item KEyyyyy is :::::::::::::::::::::${widget.itemKey}");
+  Widget _buildBody() {
     return Form(
       key: _bloc.formKey,
       child: Column(
@@ -59,7 +61,9 @@ class _FirebaseAddPhoneScreenState extends State<FirebaseAddPhoneScreen> {
                               return _bloc.phoneNameValidator(value);
                             },
                           ),
-                          inputField(StringValues.imageURL, _bloc.imgUrlController, validator: (value) {
+                          inputField(
+                              StringValues.imageURL, _bloc.imgUrlController,
+                              validator: (value) {
                             return _bloc.imgUrlValidator(value);
                           },
                               prefix: Icon(
@@ -83,46 +87,11 @@ class _FirebaseAddPhoneScreenState extends State<FirebaseAddPhoneScreen> {
                           variantOfPhoneSection(),
                           offerActiveButton(switchValueSnapshot),
                           if (switchValueSnapshot.data == true)
-                            inputField(
-                              StringValues.offerTitle,
-                              _bloc.offerTitleController,
-                              prefix: Icon(
-                                Icons.local_offer_outlined,
-                                color: MyColors.darkBlue,
-                              ),
-                              validator: (value) {
-                                return _bloc.offerTitleValidator(value);
-                              },
+                            Column(
+                              children: offerInputFields(),
                             ),
                           if (switchValueSnapshot.data == true)
-                            inputField(
-                              StringValues.offerDescription,
-                              _bloc.offerDescController,
-                              prefix: Icon(
-                                Icons.description_outlined,
-                                color: MyColors.darkBlue,
-                              ),
-                              validator: (value) {
-                                return _bloc.offerDescValidator(value);
-                              },
-                            ),
-                          if (switchValueSnapshot.data == true)
-                            inputField(
-                                StringValues.offerPercentage,
-                                onChanged: () {
-                                  return _bloc.offerPrizeCalculation();
-                                },
-                                maxLength: 2,
-                                _bloc.offerPercentageController,
-                                prefix: Icon(
-                                  Icons.percent,
-                                  color: MyColors.darkBlue,
-                                ),
-                                validator: (value) {
-                                  return _bloc.offerPercentageValidator(value);
-                                },
-                                isNumber: true),
-                          if (switchValueSnapshot.data == true) offerDetailField()
+                            offerDetailField()
                         ],
                       ),
                     );
@@ -140,7 +109,8 @@ class _FirebaseAddPhoneScreenState extends State<FirebaseAddPhoneScreen> {
         stream: _bloc.radioSelectedValueController,
         builder: (context, selectedValueSnapshot) {
           return Padding(
-            padding: EdgeInsets.only(left: screenSizeRatio * 0.04, top: screenSizeRatio * 0.01),
+            padding: EdgeInsets.only(
+                left: screenSizeRatio * 0.04, top: screenSizeRatio * 0.01),
             child: Row(
               mainAxisSize: MainAxisSize.max,
               mainAxisAlignment: MainAxisAlignment.start,
@@ -159,7 +129,8 @@ class _FirebaseAddPhoneScreenState extends State<FirebaseAddPhoneScreen> {
                 ),
                 Text(
                   StringValues.inStock,
-                  style: TextStyle(fontSize: screenSizeRatio * 0.025, color: Colors.green),
+                  style: TextStyle(
+                      fontSize: screenSizeRatio * 0.025, color: Colors.green),
                 ),
                 Radio(
                   value: 0,
@@ -171,7 +142,8 @@ class _FirebaseAddPhoneScreenState extends State<FirebaseAddPhoneScreen> {
                 ),
                 Text(
                   StringValues.stockOut,
-                  style: TextStyle(fontSize: screenSizeRatio * 0.025, color: Colors.red),
+                  style: TextStyle(
+                      fontSize: screenSizeRatio * 0.025, color: Colors.red),
                 ),
               ],
             ),
@@ -181,7 +153,10 @@ class _FirebaseAddPhoneScreenState extends State<FirebaseAddPhoneScreen> {
 
   Widget variantOfPhoneSection() {
     return Padding(
-      padding: EdgeInsets.only(top: screenSizeRatio * 0.02, bottom: screenSizeRatio * 0.01, left: screenSizeRatio * 0.04),
+      padding: EdgeInsets.only(
+          top: screenSizeRatio * 0.02,
+          bottom: screenSizeRatio * 0.01,
+          left: screenSizeRatio * 0.04),
       child: Row(
         mainAxisSize: MainAxisSize.max,
         mainAxisAlignment: MainAxisAlignment.start,
@@ -210,8 +185,11 @@ class _FirebaseAddPhoneScreenState extends State<FirebaseAddPhoneScreen> {
                   builder: (context, snapshot) {
                     return snapshot.data == true
                         ? Text(
-                            "Choose Phone Variant.!!",
-                            style: TextStyle(color: Colors.red, fontSize: screenSizeRatio * 0.02, fontWeight: FontWeight.w200),
+                            StringValues.choosePhoneVariant,
+                            style: TextStyle(
+                                color: Colors.red,
+                                fontSize: screenSizeRatio * 0.02,
+                                fontWeight: FontWeight.w200),
                           )
                         : Container();
                   },
@@ -232,11 +210,15 @@ class _FirebaseAddPhoneScreenState extends State<FirebaseAddPhoneScreen> {
             splashFactory: NoSplash.splashFactory,
             child: Container(
               decoration: BoxDecoration(
-                  color: snapshot.data != null ? (snapshot.data!.contains(item) ? MyColors.lightBlue : null) : null,
+                  color: snapshot.data != null
+                      ? (snapshot.data!.contains(item)
+                          ? MyColors.lightBlue
+                          : null)
+                      : null,
                   border: Border.all(color: MyColors.lightBlue, width: 3),
                   borderRadius: BorderRadiusDirectional.circular(10)),
-              padding: EdgeInsets.symmetric(horizontal: screenSizeRatio * 0.02, vertical: screenSizeRatio * 0.015),
-              margin: EdgeInsets.symmetric(vertical: screenSizeRatio * 0.005),
+              padding: spaceSymmetric(horizontal: 0.02, vertical: 0.015),
+              margin: spaceSymmetric(vertical: 0.005),
               child: Text(
                 item,
                 style: TextStyle(fontWeight: FontWeight.w700),
@@ -257,7 +239,8 @@ class _FirebaseAddPhoneScreenState extends State<FirebaseAddPhoneScreen> {
 
   Widget offerActiveButton(AsyncSnapshot<bool> switchValueSnapshot) {
     return Padding(
-      padding: EdgeInsets.only(left: screenSizeRatio * 0.04, top: screenSizeRatio * 0.015),
+      padding: EdgeInsets.only(
+          left: screenSizeRatio * 0.04, top: screenSizeRatio * 0.015),
       child: Row(
         children: [
           Text(
@@ -265,7 +248,6 @@ class _FirebaseAddPhoneScreenState extends State<FirebaseAddPhoneScreen> {
             style: TextStyle(fontSize: screenSizeRatio * 0.03),
           ),
           Switch(
-            // overlayColor: _bloc.switchColors,
             activeColor: MyColors.darkBlue,
             inactiveTrackColor: MyColors.lightBlue,
             value: switchValueSnapshot.data ?? false,
@@ -278,13 +260,55 @@ class _FirebaseAddPhoneScreenState extends State<FirebaseAddPhoneScreen> {
     );
   }
 
+  List<Widget> offerInputFields() {
+    return [
+      inputField(
+        StringValues.offerTitle,
+        _bloc.offerTitleController,
+        prefix: Icon(
+          Icons.local_offer_outlined,
+          color: MyColors.darkBlue,
+        ),
+        validator: (value) {
+          return _bloc.offerTitleValidator(value);
+        },
+      ),
+      inputField(
+        StringValues.offerDescription,
+        _bloc.offerDescController,
+        prefix: Icon(
+          Icons.description_outlined,
+          color: MyColors.darkBlue,
+        ),
+        validator: (value) {
+          return _bloc.offerDescValidator(value);
+        },
+      ),
+      inputField(
+          StringValues.offerPercentage,
+          onChanged: () {
+            return _bloc.offerPrizeCalculation();
+          },
+          maxLength: 2,
+          _bloc.offerPercentageController,
+          prefix: Icon(
+            Icons.percent,
+            color: MyColors.darkBlue,
+          ),
+          validator: (value) {
+            return _bloc.offerPercentageValidator(value);
+          },
+          isNumber: true)
+    ];
+  }
+
   Widget offerDetailField() {
     return Card(
       color: Colors.white,
       elevation: 5,
-      margin: EdgeInsets.symmetric(vertical: screenSizeRatio * 0.02, horizontal: screenSizeRatio * 0.04),
+      margin: spaceSymmetric(vertical: 0.02, horizontal: 0.04),
       child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: screenSizeRatio * 0.02, vertical: screenSizeRatio * 0.025),
+        padding: spaceSymmetric(horizontal: 0.02, vertical: 0.025),
         child: Row(
           children: [
             Image.asset(
@@ -292,10 +316,13 @@ class _FirebaseAddPhoneScreenState extends State<FirebaseAddPhoneScreen> {
               width: screenSizeRatio * 0.04,
             ),
             Padding(
-              padding: EdgeInsets.symmetric(horizontal: screenSizeRatio * 0.015),
+              padding: spaceSymmetric(horizontal: 0.015),
               child: Text(
                 "${StringValues.offerPrice} : ",
-                style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: screenSizeRatio * 0.03),
+                style: TextStyle(
+                    color: Colors.black,
+                    fontWeight: FontWeight.bold,
+                    fontSize: screenSizeRatio * 0.03),
               ),
             ),
             StreamBuilder<int>(
@@ -304,7 +331,9 @@ class _FirebaseAddPhoneScreenState extends State<FirebaseAddPhoneScreen> {
                   return offerPriceSnapshot.data != 0
                       ? Text(
                           "${offerPriceSnapshot.data} ₹ 🥳",
-                          style: TextStyle(fontSize: screenSizeRatio * 0.04, fontWeight: FontWeight.bold),
+                          style: TextStyle(
+                              fontSize: screenSizeRatio * 0.04,
+                              fontWeight: FontWeight.bold),
                         )
                       : Container();
                 }),
@@ -314,9 +343,27 @@ class _FirebaseAddPhoneScreenState extends State<FirebaseAddPhoneScreen> {
     );
   }
 
+  showSnackBar(String message) {
+    if (!context.mounted) return;
+
+    final snackBar = SnackBar(
+      content: Text(
+        message,
+        style: TextStyle(
+          color: MyColors.darkBlue,
+          fontSize: screenSizeRatio * 0.03,
+          fontWeight: FontWeight.bold,
+        ),
+      ),
+      backgroundColor: MyColors.lightBlue,
+    );
+
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+  }
+
   Widget submitDataButton() {
     return Container(
-      margin: EdgeInsets.symmetric(vertical: screenSizeRatio * 0.025, horizontal: screenSizeRatio * 0.04),
+      margin: spaceSymmetric(vertical: 0.025, horizontal: 0.04),
       width: double.maxFinite,
       height: screenSizeRatio * 0.08,
       child: commonElevatedButton(
