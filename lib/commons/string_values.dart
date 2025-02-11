@@ -103,6 +103,7 @@ class StringValues {
   //Google Map
 
   static String googleMap = "Google Map";
+  static String selectLocation = "Select Location";
 
   //Location Detail Screen
 
@@ -110,4 +111,7 @@ class StringValues {
   static String getCurrentLocation = "Get Current Location";
   static String setLocationFromMap = "Set location from map";
   static String savedAddresses = "Saved addresses";
+  static String searchLocation = "Search Location";
+  static String confirmLocation = "Confirm Location";
+  static String locationNotAvailable = "Location Not Available";
 }

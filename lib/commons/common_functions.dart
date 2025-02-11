@@ -31,12 +31,13 @@ AppBar commonAppbar(String title, {bool? centerTitle, List<Widget>? actions}) {
   );
 }
 
-Widget commonElevatedButton({required String title, required Function? onPressed(), Color? bagColor, Color? fontColors}) {
+Widget commonElevatedButton(
+    {required String title, required Function? onPressed(), Color? bagColor, Color? fontColors, double? borderRadius}) {
   return ElevatedButton(
       onPressed: onPressed,
       style: ElevatedButton.styleFrom(
           backgroundColor: bagColor ?? MyColors.mainColor,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadiusDirectional.circular(5))),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadiusDirectional.circular(borderRadius ?? 5))),
       child: Text(
         title,
         style: TextStyle(
@@ -157,6 +158,6 @@ navigatorPop(BuildContext context) {
   return Navigator.pop(context);
 }
 
-spaceSymmetric({double? vertical,double? horizontal}){
-  return EdgeInsets.symmetric(vertical: screenSizeRatio * (vertical??0), horizontal: screenSizeRatio * (horizontal??0));
+spaceSymmetric({double? vertical, double? horizontal}) {
+  return EdgeInsets.symmetric(vertical: screenSizeRatio * (vertical ?? 0), horizontal: screenSizeRatio * (horizontal ?? 0));
 }
