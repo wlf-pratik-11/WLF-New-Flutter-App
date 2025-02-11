@@ -13,54 +13,60 @@ import 'package:wlf_new_flutter_app/screens/googleMapScreen/LocationLatLonDl.dar
 import '../location_detail_screen_dl.dart';
 
 class GoogleMapScreenBloc {
-  GoogleMapScreenBloc() {}
+  GoogleMapScreenBloc() {
+    getCurrentLocation();
+  }
 
   var dio = Dio();
   var uuid = Uuid();
+  LatLng currentLocation = LatLng(22.2516503, 22.2516503);
   late SharedPreferences pref;
   String apiKey = "AIzaSyBGJ8mEq1C8Kn4mWY-ds6jDfsr7O8-JNGk";
 
   final searchLocationInputFieldController = TextEditingController();
+  late GoogleMapController mapController;
 
   final showSuggestionsController = BehaviorSubject<bool>.seeded(false);
   final suggestionsListController = BehaviorSubject<List<Predictions>>();
   final confirmLocationController = BehaviorSubject<String>();
 
-  final Completer<GoogleMapController> mapController = Completer<GoogleMapController>();
+  final Completer<GoogleMapController> completer = Completer<GoogleMapController>();
+
+  onMapCreated(GoogleMapController controller){
+      mapController = controller;
+      completer.complete(controller);
+  }
 
   final LocationSettings locationSettings = LocationSettings(
     accuracy: LocationAccuracy.high,
     distanceFilter: 100,
   );
 
-  late LatLng currentLocation;
-
-  late CameraPosition kGooglePlex = CameraPosition(
-    target: LatLng(22.22, 55.55),
-    zoom: 14.4746,
-  );
-
-  Future<Position> getCurrentLocation() async {
-    LocationPermission permission;
-    permission = await Geolocator.checkPermission();
-
-    if (permission == LocationPermission.denied) {
-      permission = await Geolocator.requestPermission();
-      if (permission == LocationPermission.denied) {
-        print('Location permissions are denied');
-      }
-    }
-    if (permission == LocationPermission.deniedForever) {
-      print('Location permissions are permanently denied');
-    }
-
+  Future<void> getCurrentLocation() async {
+    await checkPermission();
     final location = await Geolocator.getCurrentPosition();
-    currentLocation = LatLng(location.latitude, location.latitude);
-
-    List<Placemark>? locationAddress =
-        await GeocodingPlatform.instance?.placemarkFromCoordinates(location.latitude, location.longitude);
-    print("Current Position:::::::$locationAddress");
-    return await Geolocator.getCurrentPosition();
+    currentLocation = LatLng(location.latitude, location.longitude);
+    mapController.animateCamera(
+      CameraUpdate.newCameraPosition(
+        CameraPosition(
+          target: currentLocation,
+          zoom: 16.0,
+        ),
+      ),
+    );
+    try {
+      List<Placemark> placemark = await placemarkFromCoordinates(
+        location.latitude,
+        location.longitude,
+      );
+      if (placemark.isNotEmpty) {
+        Placemark place = placemark.first;
+        String address = "${place.name},${place.thoroughfare},${place.subLocality}, ${place.locality}, ${place.postalCode}, ${place.administrativeArea}";
+        searchLocationInputFieldController.text = address;
+      }
+    } catch (e) {
+      print(e.toString());
+    }
   }
 
   Future<List<Predictions>> getSuggestions(String input) async {
@@ -83,16 +89,49 @@ class GoogleMapScreenBloc {
     showSuggestionsController.sink.add(false);
   }
 
-  Future<void> navigateToLocation(String? placeID) async {
+  Future<void> navigateToLocation(String? placeID,String? placeIDAddress) async {
     String url = "https://maps.googleapis.com/maps/api/place/details/json?placeid=$placeID&key=$apiKey";
     var response = await dio.get(url);
 
     if (response.statusCode == 200) {
       var data = response.data["result"]["geometry"]["location"];
       final latLon = LocationLatLonDl.fromJson(data);
-      LatLng latLng = LatLng(latLon.lat ?? 0, latLon.lng ?? 0);
+      currentLocation = LatLng(latLon.lat ?? 0, latLon.lng ?? 0);
+      searchLocationInputFieldController.text = placeIDAddress??"";
+      mapController.animateCamera(
+        CameraUpdate.newCameraPosition(
+          CameraPosition(
+            target: currentLocation,
+            zoom: 16.0,
+          ),
+        ),
+      );
     } else {
-      print("***********************************************");
+      debugPrint("Error");
+    }
+  }
+
+  Future<bool> checkPermission() async {
+    LocationPermission permission;
+    permission = await Geolocator.checkPermission();
+
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+        return false;
+      }
+    }
+    if (permission == LocationPermission.deniedForever) {
+      return false;
+    }
+    return true;
+  }
+
+  confirmLocation(BuildContext context) async {
+    pref = await SharedPreferences.getInstance();
+    if (searchLocationInputFieldController.text.isNotEmpty) {
+      await pref.setString("confirmLocation", searchLocationInputFieldController.text);
+      if(context.mounted) Navigator.pop(context);
     }
   }
 }

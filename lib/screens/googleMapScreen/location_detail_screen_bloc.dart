@@ -7,6 +7,9 @@ import 'package:wlf_new_flutter_app/commons/string_values.dart';
 import 'package:wlf_new_flutter_app/screens/googleMapScreen/location_detail_screen_dl.dart';
 
 class LocationDetailScreenBloc {
+  LocationDetailScreenBloc(){
+    getConfirmLocation();
+  }
   var dio = Dio();
   late SharedPreferences pref;
 
@@ -54,39 +57,5 @@ class LocationDetailScreenBloc {
       await pref.setString("confirmLocation", searchLocationInputFieldController.text);
     }
     getConfirmLocation();
-
-    // searchLocationInputFieldController.clear();
   }
 }
-// getLatLonFromAddress(String value) async {
-//   var locations = await locationFromAddress(value);
-//   List<Placemark>? locationAddress =
-//       await GeocodingPlatform.instance?.placemarkFromCoordinates(locations[0].latitude, locations[0].longitude);
-//   print(
-//       "Current Address:::::::${locationAddress?[0].locality} ${locationAddress?[0].name} ${locationAddress?[0].subLocality} ${locationAddress?[0].country}");
-// }
-
-// getLatLonFromAddress(String value) async {
-//   var locations = await locationFromAddress(value);
-//   List<Placemark>? newPlace =
-//       await GeocodingPlatform.instance?.placemarkFromCoordinates(locations[0].latitude, locations[0].longitude);
-//
-//
-//   // this is all you need
-//   Placemark? placeMark = newPlace?[0];
-//   String? name = placeMark?.name;
-//   String? subLocality = placeMark?.subLocality;
-//   String? locality = placeMark?.locality;
-//   String? administrativeArea = placeMark?.administrativeArea;
-//   String? postalCode = placeMark?.postalCode;
-//   String? country = placeMark?.country;
-//   String address = "${name}, ${subLocality}, ${locality}, ${administrativeArea} ${postalCode}, ${country}";
-//
-//   print("Current Address:::::::${address}");
-// }
-
-// getLatLonFromAddress(String value) async {
-//   List<Location> location = await locationFromAddress(value);
-//
-//   print("Current Address:::::::${location}");
-// }
