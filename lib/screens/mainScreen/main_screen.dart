@@ -17,7 +17,7 @@ class _MainScreenState extends State<MainScreen> {
 
   @override
   void didChangeDependencies() {
-    _bloc = MainScreenBloc();
+    _bloc = MainScreenBloc(context);
     // TODO: implement didChangeDependencies
     super.didChangeDependencies();
   }
@@ -25,10 +25,11 @@ class _MainScreenState extends State<MainScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: commonAppbar(StringValues.mainScreen, centerTitle: true, actions: [
+      appBar:
+          commonAppbar(StringValues.mainScreen, centerTitle: true, actions: [
         IconButton(
           onPressed: () {
-            _bloc.signOut(context);
+            _bloc.signOut();
           },
           icon: Icon(Icons.logout),
           padding: EdgeInsets.all(screenSizeRatio * 0.02),
@@ -43,7 +44,8 @@ class _MainScreenState extends State<MainScreen> {
     return Center(
       child: Text(
         StringValues.welcomeToOurApp,
-        style: TextStyle(fontSize: screenSizeRatio * 0.04, fontWeight: FontWeight.bold),
+        style: TextStyle(
+            fontSize: screenSizeRatio * 0.04, fontWeight: FontWeight.bold),
       ),
     );
   }
@@ -62,27 +64,40 @@ class _MainScreenState extends State<MainScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Padding(
-                  padding: EdgeInsets.symmetric(vertical: screenSizeRatio * 0.01, horizontal: screenSizeRatio * 0.01),
+                  padding: paddingSymmetric(vertical: 0.01, horizontal: 0.01),
                   child: ClipRRect(
                     borderRadius: BorderRadiusDirectional.circular(100),
                     child: Image(
-                        height: screenSizeRatio * 0.09,
-                        image: NetworkImage(_bloc.user != null
+                      height: screenSizeRatio * 0.09,
+                      image: NetworkImage(
+                        _bloc.user != null
                             ? _bloc.user!.photoURL.toString()
-                            : "https://img.freepik.com/premium-photo/happy-man-ai-generated-portrait-user-profile_1119669-1.jpg")),
+                            : "https://img.freepik.com/premium-photo/happy-man-ai-generated-portrait-user-profile_1119669-1.jpg",
+                      ),
+                      errorBuilder: (context, error, stackTrace) {
+                        return Icon(Icons.broken_image);
+                      },
+                    ),
                   ),
                 ),
                 Padding(
-                  padding: EdgeInsets.symmetric(horizontal: screenSizeRatio * 0.01),
+                  padding: paddingSymmetric(horizontal: 0.01),
                   child: Text(
-                    _bloc.user != null ? _bloc.user!.displayName.toString() : "Pratik Tank",
-                    style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                    _bloc.user != null
+                        ? _bloc.user!.displayName.toString()
+                        : "Pratik Tank",
+                    style: TextStyle(
+                        color: Colors.white, fontWeight: FontWeight.bold),
                   ),
                 ),
                 Padding(
-                  padding: EdgeInsets.symmetric(vertical: screenSizeRatio * 0.01, horizontal: screenSizeRatio * 0.01),
-                  child: Text(_bloc.user != null ? _bloc.user!.email.toString() : "tankpratik112@gmail.com",
-                      style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+                  padding: paddingSymmetric(vertical: 0.01, horizontal: 0.01),
+                  child: Text(
+                      _bloc.user != null
+                          ? _bloc.user!.email.toString()
+                          : "tankpratik112@gmail.com",
+                      style: TextStyle(
+                          color: Colors.white, fontWeight: FontWeight.bold)),
                 )
               ],
             ),
@@ -107,7 +122,10 @@ class _MainScreenState extends State<MainScreen> {
                   child: ListTile(
                     title: Text(
                       _bloc.lst[index].screenTitle,
-                      style: TextStyle(color: MyColors.mainColor, fontWeight: FontWeight.bold, fontSize: screenSizeRatio * 0.025),
+                      style: TextStyle(
+                          color: MyColors.mainColor,
+                          fontWeight: FontWeight.bold,
+                          fontSize: screenSizeRatio * 0.025),
                     ),
                     tileColor: Colors.white,
                   ),

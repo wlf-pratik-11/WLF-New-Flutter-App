@@ -17,7 +17,7 @@ class _TabBarScreenState extends State<TabBarScreen> {
     return DefaultTabController(
       length: 3,
       child: Scaffold(
-        appBar: _appBar(),
+        appBar: commonAppbar(StringValues.tabBarDemo,bottom: _tabBar()),
         body: _buildBody(),
       ),
     );
@@ -28,7 +28,7 @@ class _TabBarScreenState extends State<TabBarScreen> {
       Center(
         child: ElevatedButton(
             style: ElevatedButton.styleFrom(
-              shape: RoundedRectangleBorder(borderRadius: BorderRadiusDirectional.circular(10)),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadiusDirectional.circular(screenSizeRatio*0.01)),
               backgroundColor: MyColors.mainColor,
             ),
             onPressed: () {
@@ -72,18 +72,6 @@ class _TabBarScreenState extends State<TabBarScreen> {
       Icon(Icons.local_fire_department_outlined),
       Icon(Icons.account_circle_outlined),
     ]);
-  }
-
-  AppBar _appBar() {
-    return AppBar(
-      iconTheme: IconThemeData(color: Colors.white),
-      backgroundColor: MyColors.mainColor,
-      title: Text(
-        StringValues.tabBarDemo,
-        style: TextStyle(fontSize: screenSizeRatio * 0.036, fontWeight: FontWeight.bold, color: Colors.white),
-      ),
-      bottom: _tabBar(),
-    );
   }
 
   TabBar _tabBar() {

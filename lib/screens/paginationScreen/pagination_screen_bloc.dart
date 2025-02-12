@@ -1,10 +1,12 @@
+import 'package:flutter/cupertino.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:wlf_new_flutter_app/screens/paginationScreen/pagination_screen_dl.dart';
 import 'package:wlf_new_flutter_app/screens/paginationScreen/pagination_screen_repo.dart';
 
 class PaginationScreenBloc {
-  PaginationScreenBloc() {
+  final BuildContext context;
+  PaginationScreenBloc(this.context) {
     pagingController.addPageRequestListener(
       (pageNumber) {
         getData(pageNumber);

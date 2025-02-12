@@ -117,15 +117,15 @@ class _GoogleMapScreenState extends State<GoogleMapScreen> {
               fillColor: Colors.white,
               prefixIconConstraints: BoxConstraints(maxHeight: screenSizeRatio * 0.05),
               prefixIcon: Padding(
-                padding: EdgeInsets.symmetric(horizontal: screenSizeRatio * 0.025),
+                padding: paddingSymmetric(horizontal: 0.025),
                 child: Icon(Icons.search),
               ),
               enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(10),
+                borderRadius: BorderRadius.circular(screenSizeRatio*0.01),
                 borderSide: BorderSide(color: MyColors.mainColor),
               ),
               focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(10),
+                borderRadius: BorderRadius.circular(screenSizeRatio*0.01),
                 borderSide: BorderSide(color: MyColors.darkBlue, width: 2),
               ),
             ),
@@ -177,7 +177,7 @@ class _GoogleMapScreenState extends State<GoogleMapScreen> {
           title: StringValues.confirmLocation,
           borderRadius: 15,
           onPressed: () {
-            _bloc.confirmLocation(context);
+            _bloc.confirmLocation();
             FocusScope.of(context).unfocus();
           },
           bagColor: MyColors.mainColor,
@@ -187,7 +187,7 @@ class _GoogleMapScreenState extends State<GoogleMapScreen> {
 
   Widget getCurrentLocationFloatingActionButton() {
     return FloatingActionButton.small(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadiusDirectional.circular(5)),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadiusDirectional.circular(screenSizeRatio*0.01)),
       backgroundColor: MyColors.lightBlue,
       onPressed: () {
         _bloc.getCurrentLocation();

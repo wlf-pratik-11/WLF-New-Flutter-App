@@ -8,6 +8,8 @@ import '../../../commons/my_colors.dart';
 import 'firebase_add_phone_screen_dl.dart';
 
 class FirebaseAddPhoneScreenBloc {
+  final BuildContext context;
+  FirebaseAddPhoneScreenBloc(this.context);
   DatabaseReference dbRef = FirebaseDatabase.instance.ref("WLFFlutterNewApp");
 
   final formKey = GlobalKey<FormState>();
@@ -30,7 +32,7 @@ class FirebaseAddPhoneScreenBloc {
 
   addListData() => currentVariantListController.sink.add(currentVariants);
 
-  Future<void> saveData(BuildContext context, {String? itemKey}) async {
+  Future<void> saveData({String? itemKey}) async {
     currentVariants.sort(
       (a, b) {
         int element1 = int.parse(a.replaceAll(" GB", "").replaceAll(" TB", ""));
@@ -69,7 +71,7 @@ class FirebaseAddPhoneScreenBloc {
 
     await operation;
     if (context.mounted) {
-      showSnakbar(context, itemKey != null ? StringValues.updatedSuccessfully : StringValues.savedSuccessfully);
+      showSnakbar(itemKey != null ? StringValues.updatedSuccessfully : StringValues.savedSuccessfully);
     }
     if (context.mounted) Navigator.pop(context);
   }
@@ -190,7 +192,7 @@ class FirebaseAddPhoneScreenBloc {
     }
   }
 
-  showSnakbar(BuildContext context, String title) {
+  showSnakbar(String title) {
     if (!context.mounted) return;
     var snakBar = SnackBar(
       content: Text(

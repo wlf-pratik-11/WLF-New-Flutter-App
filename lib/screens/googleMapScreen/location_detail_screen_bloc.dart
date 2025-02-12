@@ -16,6 +16,8 @@ import 'location_latlng_dl.dart';
 class LocationDetailScreenBloc {
   LocationDetailScreenBloc() {
     savedAddressDl = SavedAddressDl();
+  final BuildContext context;
+  LocationDetailScreenBloc(this.context) {
     getConfirmLocation();
   }
 
@@ -59,7 +61,7 @@ class LocationDetailScreenBloc {
         }
       }
     } catch (e) {
-      print(e.toString());
+      debugPrint(e.toString());
     }
   }
 

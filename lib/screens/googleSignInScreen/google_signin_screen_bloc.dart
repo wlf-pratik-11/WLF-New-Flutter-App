@@ -9,15 +9,19 @@ import 'package:wlf_new_flutter_app/commons/string_values.dart';
 import '../mainScreen/main_screen.dart';
 
 class GoogleSignInScreenBloc {
+  final BuildContext context;
+  GoogleSignInScreenBloc(this.context);
+
   final isSignInProcessing = BehaviorSubject<bool>.seeded(false);
 
-  Future<UserCredential?> signInWithGoogle(BuildContext context) async {
+  Future<UserCredential?> signInWithGoogle() async {
     try {
       final GoogleSignInAccount? googleUsers = await GoogleSignIn().signIn();
       isSignInProcessing.sink.add(true);
-      await Future.delayed(Duration(seconds: 2));
+      // await Future.delayed(Duration(seconds: 2));
       final GoogleSignInAuthentication? googleAuth = await googleUsers?.authentication;
-      final cred = GoogleAuthProvider.credential(accessToken: googleAuth?.accessToken, idToken: googleAuth?.idToken);
+      final OAuthCredential cred = GoogleAuthProvider.credential(accessToken: googleAuth?.accessToken, idToken: googleAuth?.idToken);
+      final UserCredential userCredential = await FirebaseAuth.instance.signInWithCredential(cred);
       if (context.mounted) {
         Navigator.pushReplacement(
           context,
@@ -29,20 +33,21 @@ class GoogleSignInScreenBloc {
           ),
         );
       }
-      return FirebaseAuth.instance.signInWithCredential(cred);
+      return userCredential;
     } catch (e) {
-      final snackBar = SnackBar(
-        content: Text(
-          StringValues.failedToSignInWithGoogle,
-          style: TextStyle(color: MyColors.buttonFontColor, fontSize: snakBarFontSize, fontWeight: FontWeight.bold),
-        ),
-        backgroundColor: MyColors.mainColor,
-        duration: Duration(seconds: 3),
-      );
       if (context.mounted) {
+        isSignInProcessing.sink.add(false);
+        final snackBar = SnackBar(
+          content: Text(
+            StringValues.failedToSignInWithGoogle,
+            style: TextStyle(color: MyColors.buttonFontColor, fontSize: snakBarFontSize, fontWeight: FontWeight.bold),
+          ),
+          backgroundColor: MyColors.mainColor,
+          duration: Duration(seconds: 3),
+        );
         ScaffoldMessenger.of(context).showSnackBar(snackBar);
       }
-      print(e.toString());
+      debugPrint(e.toString());
     }
     return null;
   }

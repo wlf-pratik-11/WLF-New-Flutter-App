@@ -19,7 +19,7 @@ class _GoogleSignInScreenState extends State<GoogleSignInScreen> {
 
   @override
   void didChangeDependencies() {
-    _bloc = GoogleSignInScreenBloc();
+    _bloc = GoogleSignInScreenBloc(context);
     // TODO: implement didChangeDependencies
     super.didChangeDependencies();
   }
@@ -72,7 +72,7 @@ class _GoogleSignInScreenState extends State<GoogleSignInScreen> {
 
   Widget _screenImage() {
     return Padding(
-      padding: EdgeInsets.symmetric(vertical: screenSizeRatio * 0.05),
+      padding: paddingSymmetric(vertical: 0.05),
       child: Image(image: AssetImage("assets/images/loginScreenVector.png")),
     );
   }
@@ -81,41 +81,54 @@ class _GoogleSignInScreenState extends State<GoogleSignInScreen> {
     return Container(
       height: buttonHeight,
       width: double.maxFinite,
-      padding: EdgeInsets.symmetric(horizontal: screenSizeRatio * 0.02),
-      child: StreamBuilder<bool>(
-          stream: _bloc.isSignInProcessing,
-          builder: (context, isSignInProcessingSnapshot) {
-            return isSignInProcessingSnapshot.data == false ? enableButton() : disableButton();
-          }),
+      padding: paddingSymmetric(horizontal: 0.02),
+      child: signInButton(),
     );
   }
 
-  Widget enableButton() {
-    return ElevatedButton.icon(
-      label: Text(
-        StringValues.signInWithGoogle,
-        style: TextStyle(color: MyColors.buttonFontColor, fontWeight: FontWeight.bold, fontSize: screenSizeRatio * 0.035),
-      ),
-      icon: Image(
-        image: AssetImage("assets/images/googleIcon.png"),
-        height: screenSizeRatio * 0.06,
-      ),
-      onPressed: () async {
-        await _bloc.signInWithGoogle(context);
-      },
-      style: ElevatedButton.styleFrom(
-          backgroundColor: MyColors.mainColor, shape: RoundedRectangleBorder(borderRadius: BorderRadiusDirectional.circular(7))),
-    );
-  }
+  Widget signInButton() {
+      return StreamBuilder<bool>(
+        stream: _bloc.isSignInProcessing,
+        builder: (context, snapshot) {
+          bool isProcessing = snapshot.data ?? false;
 
-  Widget disableButton() {
-    return ElevatedButton(
-      onPressed: null,
-      style: ElevatedButton.styleFrom(
-          disabledBackgroundColor: MyColors.mainColor.withOpacity(0.6),
-          backgroundColor: MyColors.mainColor,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadiusDirectional.circular(7))),
-      child: LoadingAnimationWidget.discreteCircle(color: MyColors.mainColor, size: screenSizeRatio * 0.05),
-    );
+          return ElevatedButton.icon(
+            label: isProcessing
+                ? LoadingAnimationWidget.discreteCircle(
+              color: MyColors.buttonFontColor,
+              size: screenSizeRatio * 0.05,
+            )
+                : Text(
+              StringValues.signInWithGoogle,
+              style: TextStyle(
+                color: MyColors.buttonFontColor,
+                fontWeight: FontWeight.bold,
+                fontSize: screenSizeRatio * 0.035,
+              ),
+            ),
+            icon: isProcessing
+                ? const SizedBox()
+                : Image.asset(
+              "assets/images/googleIcon.png",
+              height: screenSizeRatio * 0.06,
+            ),
+            onPressed: isProcessing
+                ? null
+                : () async {
+              await _bloc.signInWithGoogle();
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: isProcessing
+                  ? MyColors.mainColor.withOpacity(
+                  0.7)
+                  : MyColors.mainColor,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadiusDirectional.circular(
+                    screenSizeRatio * 0.01),
+              ),
+            ),
+          );
+        },
+      );
   }
 }

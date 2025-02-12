@@ -13,7 +13,6 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
-
   late SplashScreenBloc _bloc;
 
   @override
@@ -31,7 +30,7 @@ class _SplashScreenState extends State<SplashScreen> {
     );
   }
 
-  Widget _buildBody(){
+  Widget _buildBody() {
     return Column(
       mainAxisSize: MainAxisSize.max,
       mainAxisAlignment: MainAxisAlignment.center,
@@ -47,15 +46,20 @@ class _SplashScreenState extends State<SplashScreen> {
           text: TextSpan(
             children: [
               TextSpan(
-                  text: "${StringValues.WLF}\n",
-                  style: GoogleFonts.nunito(
-                      fontSize: screenSizeRatio * 0.03,
-                      color: MyColors.mainColor.withOpacity(0.5),
-                      fontWeight: FontWeight.bold)),
+                text: "${StringValues.wlf}\n",
+                style: GoogleFonts.nunito(
+                  fontSize: screenSizeRatio * 0.03,
+                  color: MyColors.mainColor.withOpacity(0.5),
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
               TextSpan(
                 text: StringValues.flutterNewApp,
                 style: GoogleFonts.nunito(
-                    fontSize: screenSizeRatio * 0.04, color: MyColors.mainColor, fontWeight: FontWeight.bold),
+                  fontSize: screenSizeRatio * 0.04,
+                  color: MyColors.mainColor,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ],
           ),

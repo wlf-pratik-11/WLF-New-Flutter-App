@@ -20,7 +20,7 @@ class _PickImageCameraGalleryState extends State<PickImageCameraGallery> {
 
   @override
   void didChangeDependencies() {
-    _bloc = PickImageCameraGalleryBloc();
+    _bloc = PickImageCameraGalleryBloc(context);
     // TODO: implement didChangeDependencies
     super.didChangeDependencies();
   }
@@ -60,7 +60,7 @@ class _PickImageCameraGalleryState extends State<PickImageCameraGallery> {
                       : Image.file(File(image.data.toString())));
             }),
         Padding(
-          padding: EdgeInsets.symmetric(horizontal: screenSizeRatio * 0.02, vertical: screenSizeRatio * 0.02),
+          padding: paddingSymmetric(horizontal: 0.02, vertical: 0.02),
           child: SizedBox(
             height: buttonHeight,
             width: double.maxFinite,
@@ -68,7 +68,6 @@ class _PickImageCameraGalleryState extends State<PickImageCameraGallery> {
               title: StringValues.pickImage,
               onPressed: () {
                 _showBottomSheet();
-                return null;
               },
             ),
           ),
@@ -137,6 +136,5 @@ class _PickImageCameraGalleryState extends State<PickImageCameraGallery> {
         );
       },
     );
-    return null;
   }
 }
