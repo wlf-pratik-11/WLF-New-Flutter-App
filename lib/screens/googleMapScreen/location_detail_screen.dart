@@ -78,7 +78,9 @@ class _LocationDetailScreenState extends State<LocationDetailScreen> {
                 //Get Current Location
                 buttonContainer(
                     value: StringValues.getCurrentLocation,
-                    onTap: () {},
+                    onTap: () {
+                      _bloc.getCurrentLocation();
+                    },
                     leadingIcon: Icon(
                       Icons.my_location,
                       color: MyColors.mainColor,
@@ -115,16 +117,16 @@ class _LocationDetailScreenState extends State<LocationDetailScreen> {
   //My Current Location Container
   Widget currentLocationContainer() {
     return Container(
-      margin: spaceSymmetric(horizontal: 0.01, vertical: 0.01),
+      margin: paddingSymmetric(horizontal: 0.01, vertical: 0.01),
       width: double.maxFinite,
       decoration: BoxDecoration(
-          color: MyColors.lightBlue,
+          color: MyColors.lightBlue.withOpacity(0.5),
           borderRadius: BorderRadiusDirectional.circular(15),
           border: Border.all(color: MyColors.mainColor)),
       child: Column(
         children: [
           Padding(
-            padding: spaceSymmetric(horizontal: 0.02, vertical: 0.02),
+            padding: paddingSymmetric(horizontal: 0.02, vertical: 0.02),
             child: Row(
               children: [
                 Icon(
@@ -133,7 +135,7 @@ class _LocationDetailScreenState extends State<LocationDetailScreen> {
                   size: screenSizeRatio * 0.05,
                 ),
                 Padding(
-                  padding: spaceSymmetric(horizontal: 0.018),
+                  padding: paddingSymmetric(horizontal: 0.018),
                   child: Text(
                     StringValues.myLocation,
                     style: TextStyle(
@@ -152,11 +154,14 @@ class _LocationDetailScreenState extends State<LocationDetailScreen> {
             thickness: 2,
           )),
           Padding(
-            padding: spaceSymmetric(horizontal: 0.03, vertical: 0.02),
+            padding: paddingSymmetric(horizontal: 0.03, vertical: 0.02),
             child: StreamBuilder<String>(
                 stream: _bloc.confirmLocationController,
                 builder: (context, confirmLocationSnapshot) {
                   return Text(
+                    maxLines: 3,
+                    overflow: TextOverflow.ellipsis,
+                    textDirection: TextDirection.ltr,
                     "${confirmLocationSnapshot.data}",
                     style: TextStyle(fontWeight: FontWeight.w500, color: Colors.black, fontSize: screenSizeRatio * 0.025),
                   );
@@ -170,7 +175,7 @@ class _LocationDetailScreenState extends State<LocationDetailScreen> {
   //Location Search Field
   Widget locationSearchField() {
     return Padding(
-      padding: spaceSymmetric(vertical: 0.02, horizontal: 0.01),
+      padding: paddingSymmetric(vertical: 0.02, horizontal: 0.01),
       child: StreamBuilder<List<Predictions>>(
           stream: _bloc.suggestionsListController,
           builder: (context, suggestionsListSnapshot) {
@@ -210,7 +215,7 @@ class _LocationDetailScreenState extends State<LocationDetailScreen> {
   //Get Current Location and Set location from map button
   Widget buttonContainer({required String value, required Function() onTap, required Icon leadingIcon, Icon? trailingIcon}) {
     return Padding(
-      padding: spaceSymmetric(vertical: 0.02, horizontal: 0.01),
+      padding: paddingSymmetric(vertical: 0.02, horizontal: 0.01),
       child: ListTile(
         titleTextStyle: GoogleFonts.nunito(
           textStyle: TextStyle(color: MyColors.mainColor, fontSize: screenSizeRatio * 0.028, fontWeight: FontWeight.w700),
@@ -228,14 +233,14 @@ class _LocationDetailScreenState extends State<LocationDetailScreen> {
   //Saved Addresses List
   Widget savedLocation() {
     return Container(
-      margin: spaceSymmetric(horizontal: 0.01, vertical: 0.015),
+      margin: paddingSymmetric(horizontal: 0.01, vertical: 0.015),
       width: double.maxFinite,
       decoration:
           BoxDecoration(borderRadius: BorderRadiusDirectional.circular(10), border: Border.all(color: MyColors.mainColor)),
       child: Column(
         children: [
           ListTile(
-            tileColor: MyColors.lightBlue,
+            tileColor: MyColors.lightBlue.withOpacity(0.5),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadiusDirectional.circular(10),
             ),
@@ -272,13 +277,15 @@ class _LocationDetailScreenState extends State<LocationDetailScreen> {
   Widget confirmLocationButton() {
     return Container(
       width: double.maxFinite,
-      margin: spaceSymmetric(vertical: 0.02, horizontal: 0.03),
+      margin: paddingSymmetric(vertical: 0.02, horizontal: 0.03),
       height: screenSizeRatio * 0.08,
       child: commonElevatedButton(
+          borderRadius: 15,
           title: StringValues.confirmLocation,
           onPressed: () {
             _bloc.confirmLocation();
             FocusScope.of(context).unfocus();
+            // return null;
           },
           bagColor: MyColors.mainColor,
           fontColors: Colors.white),

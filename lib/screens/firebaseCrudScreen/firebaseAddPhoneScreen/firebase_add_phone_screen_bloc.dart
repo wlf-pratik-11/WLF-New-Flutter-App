@@ -32,7 +32,7 @@ class FirebaseAddPhoneScreenBloc {
 
   Future<void> saveData(BuildContext context, {String? itemKey}) async {
     currentVariants.sort(
-          (a, b) {
+      (a, b) {
         int element1 = int.parse(a.replaceAll(" GB", "").replaceAll(" TB", ""));
         int element2 = int.parse(b.replaceAll(" GB", "").replaceAll(" TB", ""));
 
@@ -64,19 +64,18 @@ class FirebaseAddPhoneScreenBloc {
     DateTime now = DateTime.now();
     String key = "${now.year}${now.month}${now.day}${now.microsecond}";
 
-
-    final Future<void> operation = itemKey != null ?
-    dbRef.child(itemKey ?? "").update(phoneData.toJson()):
-    dbRef.child(key).set(phoneData.toJson());
+    final Future<void> operation =
+        itemKey != null ? dbRef.child(itemKey).update(phoneData.toJson()) : dbRef.child(key).set(phoneData.toJson());
 
     await operation;
-    showSnakbar(context, itemKey != null ?  StringValues.updatedSuccessfully: StringValues.savedSuccessfully);
-    if(context.mounted) Navigator.pop(context);
+    if (context.mounted) {
+      showSnakbar(context, itemKey != null ? StringValues.updatedSuccessfully : StringValues.savedSuccessfully);
+    }
+    if (context.mounted) Navigator.pop(context);
   }
 
   void getData(String itemKey) async {
-
-    DatabaseEvent event = await dbRef.child("$itemKey").once();
+    DatabaseEvent event = await dbRef.child(itemKey).once();
     DataSnapshot snapshot = event.snapshot;
 
     final data = FirebaseAddPhoneScreenDl.fromJson(snapshot.value);
@@ -191,7 +190,7 @@ class FirebaseAddPhoneScreenBloc {
     }
   }
 
-  showSnakbar(BuildContext context,String title){
+  showSnakbar(BuildContext context, String title) {
     if (!context.mounted) return;
     var snakBar = SnackBar(
       content: Text(

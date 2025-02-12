@@ -1,13 +1,11 @@
-/// lat : 21.5444078
-/// lng : 71.15481869999999
-
 class LocationLatLonDl {
   LocationLatLonDl({
-      double? lat, 
-      double? lng,}){
+    double? lat,
+    double? lng,
+  }) {
     _lat = lat;
     _lng = lng;
-}
+  }
 
   LocationLatLonDl.fromJson(dynamic json) {
     _lat = json['lat'];
@@ -25,5 +23,4 @@ class LocationLatLonDl {
     map['lng'] = _lng;
     return map;
   }
-
 }

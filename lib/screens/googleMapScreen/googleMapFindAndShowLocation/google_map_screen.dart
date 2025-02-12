@@ -20,7 +20,7 @@ class _GoogleMapScreenState extends State<GoogleMapScreen> {
 
   @override
   void didChangeDependencies() {
-    _bloc = GoogleMapScreenBloc();
+    _bloc = GoogleMapScreenBloc(context);
     // TODO: implement didChangeDependencies
     super.didChangeDependencies();
   }
@@ -42,20 +42,28 @@ class _GoogleMapScreenState extends State<GoogleMapScreen> {
           child: googleMap(),
         ),
 
+        //Marker
+        Center(
+            child: Image.asset(
+          "assets/images/locatinMarker.png",
+          height: screenSizeRatio * 0.05,
+          width: screenSizeRatio * 0.05,
+        )),
+
         // Search Field Positioned Below the AppBar
         Positioned(
-          top: screenSizeRatio*0.015,
-          left: screenSizeRatio*0.015,
-          right: screenSizeRatio*0.015,
+          top: screenSizeRatio * 0.015,
+          left: screenSizeRatio * 0.015,
+          right: screenSizeRatio * 0.015,
           child: locationSearchField(),
         ),
 
         // Address Suggestions Positioned Below the Search Field
         Positioned(
-          top: kToolbarHeight+screenSizeRatio*0.03,// Adjust based on search field height
-          left: screenSizeRatio*0.01,
-          right: screenSizeRatio*0.01,
-          child:  showSuggestionContainer(),
+          top: kToolbarHeight + screenSizeRatio * 0.03, // Adjust based on search field height
+          left: screenSizeRatio * 0.01,
+          right: screenSizeRatio * 0.01,
+          child: showSuggestionContainer(),
         ),
 
         // Confirm Location Button Positioned at the Bottom
@@ -66,15 +74,17 @@ class _GoogleMapScreenState extends State<GoogleMapScreen> {
           child: confirmLocationButton(),
         ),
       ],
-    )
-    ;
+    );
   }
 
-  Widget googleMap(){
+  Widget googleMap() {
     return GoogleMap(
       initialCameraPosition: CameraPosition(target: _bloc.currentLocation, zoom: 15),
       zoomControlsEnabled: false,
       onMapCreated: _bloc.onMapCreated,
+      onCameraIdle: () {
+        _bloc.getCameraLocation();
+      },
     );
   }
 
@@ -110,6 +120,7 @@ class _GoogleMapScreenState extends State<GoogleMapScreen> {
                 borderSide: BorderSide(color: MyColors.darkBlue, width: 2),
               ),
             ),
+            onTapOutside: (event) => FocusManager.instance.primaryFocus?.unfocus(),
           );
         });
   }
@@ -122,29 +133,22 @@ class _GoogleMapScreenState extends State<GoogleMapScreen> {
             return ListView.builder(
               physics: NeverScrollableScrollPhysics(),
               shrinkWrap: true,
-              itemCount: suggestedAddress.length < 5
-                  ? suggestedAddress.length
-                  : 5,
+              itemCount: suggestedAddress.length < 5 ? suggestedAddress.length : 5,
               itemBuilder: (context, index) {
                 return InkWell(
                     onTap: () async {
-                      _bloc.saveAddressInTextFormField(
-                          suggestedAddress[index].description);
-                      await _bloc.navigateToLocation(
-                          suggestedAddress[index].placeId,suggestedAddress[index].description);
+                      _bloc.saveAddressInTextFormField(suggestedAddress[index].description);
+                      await _bloc.navigateToLocation(suggestedAddress[index].placeId, suggestedAddress[index].description);
                     },
                     child: Container(
-                      padding: spaceSymmetric(
-                          vertical: 0.03, horizontal: 0.03),
-                      margin: spaceSymmetric(horizontal: 0.01),
+                      padding: paddingSymmetric(vertical: 0.03, horizontal: 0.03),
+                      margin: paddingSymmetric(horizontal: 0.01),
                       color: Colors.white,
                       child: Text(
                         "${suggestedAddress[index].description}",
                         overflow: TextOverflow.ellipsis,
                         maxLines: 2,
-                        style: TextStyle(
-                            fontSize: screenSizeRatio * 0.025,
-                            fontWeight: FontWeight.w500),
+                        style: TextStyle(fontSize: screenSizeRatio * 0.025, fontWeight: FontWeight.w500),
                       ),
                     ));
               },
@@ -158,7 +162,7 @@ class _GoogleMapScreenState extends State<GoogleMapScreen> {
   Widget confirmLocationButton() {
     return Container(
       width: double.maxFinite,
-      margin: spaceSymmetric(vertical: 0.02, horizontal: 0.13),
+      margin: paddingSymmetric(vertical: 0.02, horizontal: 0.13),
       height: screenSizeRatio * 0.08,
       child: commonElevatedButton(
           title: StringValues.confirmLocation,
@@ -166,14 +170,13 @@ class _GoogleMapScreenState extends State<GoogleMapScreen> {
           onPressed: () {
             _bloc.confirmLocation(context);
             FocusScope.of(context).unfocus();
-            return null;
           },
           bagColor: MyColors.mainColor,
           fontColors: Colors.white),
     );
   }
 
-  Widget getCurrentLocationFloatingActionButton(){
+  Widget getCurrentLocationFloatingActionButton() {
     return FloatingActionButton.small(
       shape: RoundedRectangleBorder(borderRadius: BorderRadiusDirectional.circular(5)),
       backgroundColor: MyColors.lightBlue,
@@ -186,5 +189,4 @@ class _GoogleMapScreenState extends State<GoogleMapScreen> {
       ),
     );
   }
-
 }

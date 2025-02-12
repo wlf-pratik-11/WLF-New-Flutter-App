@@ -8,14 +8,16 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uuid/uuid.dart';
-import 'package:wlf_new_flutter_app/screens/googleMapScreen/LocationLatLonDl.dart';
+import 'package:wlf_new_flutter_app/commons/common_functions.dart';
+import 'package:wlf_new_flutter_app/screens/googleMapScreen/location_latlng_dl.dart';
 
 import '../location_detail_screen_dl.dart';
 
 class GoogleMapScreenBloc {
-  GoogleMapScreenBloc() {
+  GoogleMapScreenBloc(this.context) {
     getCurrentLocation();
   }
+  BuildContext context;
 
   var dio = Dio();
   var uuid = Uuid();
@@ -30,11 +32,8 @@ class GoogleMapScreenBloc {
   final suggestionsListController = BehaviorSubject<List<Predictions>>();
   final confirmLocationController = BehaviorSubject<String>();
 
-  final Completer<GoogleMapController> completer = Completer<GoogleMapController>();
-
-  onMapCreated(GoogleMapController controller){
-      mapController = controller;
-      completer.complete(controller);
+  onMapCreated(GoogleMapController controller) {
+    mapController = controller;
   }
 
   final LocationSettings locationSettings = LocationSettings(
@@ -61,7 +60,8 @@ class GoogleMapScreenBloc {
       );
       if (placemark.isNotEmpty) {
         Placemark place = placemark.first;
-        String address = "${place.name},${place.thoroughfare},${place.subLocality}, ${place.locality}, ${place.postalCode}, ${place.administrativeArea}";
+        String address =
+            "${place.name},${place.thoroughfare},${place.subLocality}, ${place.locality}, ${place.postalCode}, ${place.administrativeArea}";
         searchLocationInputFieldController.text = address;
       }
     } catch (e) {
@@ -89,7 +89,7 @@ class GoogleMapScreenBloc {
     showSuggestionsController.sink.add(false);
   }
 
-  Future<void> navigateToLocation(String? placeID,String? placeIDAddress) async {
+  Future<void> navigateToLocation(String? placeID, String? placeIDAddress) async {
     String url = "https://maps.googleapis.com/maps/api/place/details/json?placeid=$placeID&key=$apiKey";
     var response = await dio.get(url);
 
@@ -97,7 +97,7 @@ class GoogleMapScreenBloc {
       var data = response.data["result"]["geometry"]["location"];
       final latLon = LocationLatLonDl.fromJson(data);
       currentLocation = LatLng(latLon.lat ?? 0, latLon.lng ?? 0);
-      searchLocationInputFieldController.text = placeIDAddress??"";
+      searchLocationInputFieldController.text = placeIDAddress ?? "";
       mapController.animateCamera(
         CameraUpdate.newCameraPosition(
           CameraPosition(
@@ -131,7 +131,31 @@ class GoogleMapScreenBloc {
     pref = await SharedPreferences.getInstance();
     if (searchLocationInputFieldController.text.isNotEmpty) {
       await pref.setString("confirmLocation", searchLocationInputFieldController.text);
-      if(context.mounted) Navigator.pop(context);
+      if (context.mounted) Navigator.pop(context);
     }
+  }
+
+  getCameraLocation() async {
+    Future<LatLng> latLng =
+        mapController.getLatLng(ScreenCoordinate(x: (screenSize!.height / 2).toInt(), y: (screenSize!.width / 2).toInt()));
+    latLng.then(
+      (value) async {
+        try {
+          List<Placemark> placemark = await placemarkFromCoordinates(
+            value.latitude,
+            value.longitude,
+          );
+          if (placemark.isNotEmpty) {
+            Placemark place = placemark.first;
+            String address =
+                "${place.name},${place.thoroughfare},${place.subLocality}, ${place.locality}, ${place.postalCode}, ${place.administrativeArea}";
+            print("Get Location On Camera Move:::::::${address}");
+            searchLocationInputFieldController.text = address;
+          }
+        } catch (e) {
+          print(e.toString());
+        }
+      },
+    );
   }
 }

@@ -4,12 +4,25 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:wlf_new_flutter_app/commons/string_values.dart';
 import 'package:wlf_new_flutter_app/screens/googleSignInScreen/google_signin_screen.dart';
 
+import '../../commons/DrawerDl.dart';
 import '../../commons/common_functions.dart';
 import '../../commons/my_colors.dart';
+import '../firebaseCrudScreen/firebase_crud_screen.dart';
+import '../googleMapScreen/location_detail_screen.dart';
+import '../paginationScreen/pagination_screen.dart';
+import '../selectImageFronCameraAndGallery/pick_image_camera_gallery.dart';
+import '../tabBarScreen/tabbar_screen.dart';
 
 class MainScreenBloc {
-
   final user = FirebaseAuth.instance.currentUser;
+
+  List<DrawerDl> lst = [
+    DrawerDl(TabBarScreen(), StringValues.tabBarDemo),
+    DrawerDl(PickImageCameraGallery(), StringValues.pickImageFromCameraAndGalleryDemo),
+    DrawerDl(PaginationScreen(), StringValues.paginationDemo),
+    DrawerDl(FirebaseCrudScreen(), StringValues.firebaseCrudDemo),
+    DrawerDl(LocationDetailScreen(), StringValues.googleMap),
+  ];
 
   Future<void> signOut(BuildContext context) async {
     showDialog(
@@ -49,7 +62,7 @@ class MainScreenBloc {
                             await FirebaseAuth.instance.signOut();
                             await GoogleSignIn().signOut().then(
                               (value) {
-                                if(context.mounted){
+                                if (context.mounted) {
                                   Navigator.pop(context);
                                   Navigator.pushReplacement(
                                       context,

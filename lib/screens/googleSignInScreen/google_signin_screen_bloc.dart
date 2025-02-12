@@ -16,10 +16,8 @@ class GoogleSignInScreenBloc {
       final GoogleSignInAccount? googleUsers = await GoogleSignIn().signIn();
       isSignInProcessing.sink.add(true);
       await Future.delayed(Duration(seconds: 2));
-      final GoogleSignInAuthentication? googleAuth =
-          await googleUsers?.authentication;
-      final cred = GoogleAuthProvider.credential(
-          accessToken: googleAuth?.accessToken, idToken: googleAuth?.idToken);
+      final GoogleSignInAuthentication? googleAuth = await googleUsers?.authentication;
+      final cred = GoogleAuthProvider.credential(accessToken: googleAuth?.accessToken, idToken: googleAuth?.idToken);
       if (context.mounted) {
         Navigator.pushReplacement(
           context,
@@ -36,10 +34,7 @@ class GoogleSignInScreenBloc {
       final snackBar = SnackBar(
         content: Text(
           StringValues.failedToSignInWithGoogle,
-          style: TextStyle(
-              color: MyColors.buttonFontColor,
-              fontSize: snakBarFontSize,
-              fontWeight: FontWeight.bold),
+          style: TextStyle(color: MyColors.buttonFontColor, fontSize: snakBarFontSize, fontWeight: FontWeight.bold),
         ),
         backgroundColor: MyColors.mainColor,
         duration: Duration(seconds: 3),

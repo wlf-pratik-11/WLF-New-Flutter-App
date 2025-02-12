@@ -1,7 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:wlf_new_flutter_app/commons/common_functions.dart';
 import 'package:wlf_new_flutter_app/commons/string_values.dart';
 
@@ -29,10 +28,10 @@ class _MyAppState extends State<MyApp> {
     initializeScreenSize(context);
     return MaterialApp(
       title: StringValues.flutterDemo,
-      // builder: (context, child) {
-      //   initializeScreenSize(context);
-      //   return SplashScreen();
-      // },
+      builder: (context, child) {
+        initializeScreenSize(context);
+        return child!;
+      },
       theme: ThemeData(
         scaffoldBackgroundColor: Colors.white,
         textTheme: GoogleFonts.nunitoTextTheme(Theme.of(context).textTheme),

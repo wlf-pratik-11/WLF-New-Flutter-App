@@ -35,9 +35,9 @@ class _FirebaseCrudScreenState extends State<FirebaseCrudScreen> {
     return Scaffold(
       appBar: commonAppbar(StringValues.firebaseCrudScreen, actions: [
         IconButton(
-          onPressed:() => navigatorPush(context,FirebaseAddPhoneScreen()),
+          onPressed: () => navigatorPush(context, FirebaseAddPhoneScreen()),
           icon: Icon(Icons.add_box_outlined),
-          padding: spaceSymmetric(horizontal:0.03),
+          padding: paddingSymmetric(horizontal: 0.03),
         )
       ]),
       body: _buildBody(),
@@ -52,7 +52,7 @@ class _FirebaseCrudScreenState extends State<FirebaseCrudScreen> {
         screenData = FirebaseCrudScreenDl.fromJson(snapshot.value);
         return Dismissible(
           background: Container(
-            padding: spaceSymmetric(horizontal: 0.025),
+            padding: paddingSymmetric(horizontal: 0.025),
             alignment: Alignment.centerLeft,
             color: MyColors.lightBlue,
             child: Row(
@@ -76,9 +76,11 @@ class _FirebaseCrudScreenState extends State<FirebaseCrudScreen> {
           },
           child: InkWell(
             child: cardForFirebaseAnimatedList(snapshot: snapshot, index: index, screenData: screenData),
-            onLongPress: () => navigatorPush(context,FirebaseAddPhoneScreen(
-              itemKey: snapshot.key,
-            )),
+            onLongPress: () => navigatorPush(
+                context,
+                FirebaseAddPhoneScreen(
+                  itemKey: snapshot.key,
+                )),
           ),
         );
       },
@@ -91,17 +93,14 @@ class _FirebaseCrudScreenState extends State<FirebaseCrudScreen> {
       color: Colors.white,
       elevation: 5,
       shape: RoundedRectangleBorder(borderRadius: BorderRadiusDirectional.circular(5)),
-      margin: spaceSymmetric(vertical:  0.01, horizontal: 0.015),
+      margin: paddingSymmetric(vertical: 0.01, horizontal: 0.015),
       child: Padding(
         padding: EdgeInsets.all(screenSizeRatio * 0.02),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.max,
-          children: [
-            cardLeftPart(screenData: screenData),
-            cardRightPart(screenData: screenData)
-          ],
+          children: [cardLeftPart(screenData: screenData), cardRightPart(screenData: screenData)],
         ),
       ),
     );
@@ -148,7 +147,7 @@ class _FirebaseCrudScreenState extends State<FirebaseCrudScreen> {
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           Padding(
-            padding: spaceSymmetric(vertical:  0.01),
+            padding: paddingSymmetric(vertical: 0.01),
             child: Row(
               mainAxisSize: MainAxisSize.max,
               mainAxisAlignment: MainAxisAlignment.end,
@@ -164,7 +163,7 @@ class _FirebaseCrudScreenState extends State<FirebaseCrudScreen> {
                   ),
                 ),
                 Container(
-                  margin: spaceSymmetric(horizontal: 0.02),
+                  margin: paddingSymmetric(horizontal: 0.02),
                   decoration: BoxDecoration(
                       color: screenData.inStock == true
                           ? CupertinoColors.systemGreen.withOpacity(0.2)
@@ -172,7 +171,7 @@ class _FirebaseCrudScreenState extends State<FirebaseCrudScreen> {
                       shape: BoxShape.rectangle,
                       borderRadius: BorderRadiusDirectional.circular(5)),
                   child: Padding(
-                    padding: spaceSymmetric(vertical: 0.008, horizontal:  0.009),
+                    padding: paddingSymmetric(vertical: 0.008, horizontal: 0.009),
                     child: Text(
                       screenData.inStock == true ? StringValues.inStock : StringValues.stockOut,
                       style: TextStyle(
@@ -186,7 +185,7 @@ class _FirebaseCrudScreenState extends State<FirebaseCrudScreen> {
             ),
           ),
           Padding(
-            padding: spaceSymmetric(vertical: 0.01),
+            padding: paddingSymmetric(vertical: 0.01),
             child: Text(
               "₹ ${screenData.price.toString()}",
               style: TextStyle(
@@ -217,7 +216,7 @@ class _FirebaseCrudScreenState extends State<FirebaseCrudScreen> {
                     text: "₹ ${screenData.offerPrice.toString()}"),
               ])),
           Padding(
-            padding: spaceSymmetric(vertical: 0.01),
+            padding: paddingSymmetric(vertical: 0.01),
             child: Wrap(
               children: screenData.storageVariant?.map(
                     (e) {
@@ -228,7 +227,7 @@ class _FirebaseCrudScreenState extends State<FirebaseCrudScreen> {
             ),
           ),
           Padding(
-            padding: spaceSymmetric(vertical: 0.01),
+            padding: paddingSymmetric(vertical: 0.01),
             child: Text(
               screenData.inOffer == true
                   ? "${screenData.offerTitle} ${screenData.offerDescription} ${screenData.offerPercentage}%"
@@ -238,7 +237,7 @@ class _FirebaseCrudScreenState extends State<FirebaseCrudScreen> {
             ),
           ),
           Padding(
-            padding: spaceSymmetric(vertical: 0.01),
+            padding: paddingSymmetric(vertical: 0.01),
             child: commonElevatedIconButton(
               title: StringValues.addToCart,
               leading: Image.asset(
@@ -258,8 +257,8 @@ class _FirebaseCrudScreenState extends State<FirebaseCrudScreen> {
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
         Container(
-          padding: spaceSymmetric(horizontal: 0.004, vertical: 0.004),
-          margin: spaceSymmetric(horizontal: 0.01, vertical: 0.005),
+          padding: paddingSymmetric(horizontal: 0.004, vertical: 0.004),
+          margin: paddingSymmetric(horizontal: 0.01, vertical: 0.005),
           decoration: BoxDecoration(
             border: Border.all(color: MyColors.darkBlue),
             borderRadius: BorderRadiusDirectional.circular(100),
@@ -282,8 +281,8 @@ class _FirebaseCrudScreenState extends State<FirebaseCrudScreen> {
 
   Widget variantContainer(String varieant) {
     return Container(
-      margin: spaceSymmetric(horizontal: 0.008, vertical: 0.005),
-      padding: spaceSymmetric(vertical:  0.006, horizontal: 0.012),
+      margin: paddingSymmetric(horizontal: 0.008, vertical: 0.005),
+      padding: paddingSymmetric(vertical: 0.006, horizontal: 0.012),
       decoration:
           BoxDecoration(color: Colors.black54, shape: BoxShape.rectangle, borderRadius: BorderRadiusDirectional.circular(5)),
       child: Text(

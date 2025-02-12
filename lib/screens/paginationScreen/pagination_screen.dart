@@ -117,10 +117,12 @@ class _PaginationScreenState extends State<PaginationScreen> {
   }
 
   Widget _expansionTile(Results item) {
+    final ExpansionTileController controller = ExpansionTileController();
     return StreamBuilder<bool>(
         stream: _bloc.isExpanded,
         builder: (context, isExpandedSnapshot) {
           return ExpansionTile(
+            controller: controller,
             initiallyExpanded: isExpandedSnapshot.data ?? false,
             minTileHeight: screenSizeRatio * 0.15,
             collapsedBackgroundColor: MyColors.listTileColors,
@@ -129,7 +131,17 @@ class _PaginationScreenState extends State<PaginationScreen> {
             leading: _leading(item),
             title: _title(item),
             subtitle: _subTitle(item),
-            trailing: _trailing(item, isExpandedSnapshot),
+            trailing: _trailing(
+              item,
+              isExpandedSnapshot,
+              onTap: (isExpanded) {
+                if (isExpanded) {
+                  controller.expand();
+                } else {
+                  controller.collapse();
+                }
+              },
+            ),
             children: _expansionTileChildren(item),
           );
         });
@@ -187,7 +199,7 @@ class _PaginationScreenState extends State<PaginationScreen> {
     );
   }
 
-  Widget _trailing(Results item, AsyncSnapshot<bool> isExpandedSnapshot) {
+  Widget _trailing(Results item, AsyncSnapshot<bool> isExpandedSnapshot, {Function(bool isExpanded)? onTap}) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -211,6 +223,7 @@ class _PaginationScreenState extends State<PaginationScreen> {
         ),
         InkWell(
           onTap: () {
+            onTap?.call(!(isExpandedSnapshot.data ?? false));
             _bloc.isExpanded.sink.add(!(isExpandedSnapshot.data ?? false));
           },
           child: Icon(

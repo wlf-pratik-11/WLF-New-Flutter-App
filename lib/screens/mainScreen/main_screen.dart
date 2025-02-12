@@ -2,13 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:wlf_new_flutter_app/commons/common_functions.dart';
 import 'package:wlf_new_flutter_app/commons/my_colors.dart';
 import 'package:wlf_new_flutter_app/commons/string_values.dart';
-import 'package:wlf_new_flutter_app/screens/firebaseCrudScreen/firebase_crud_screen.dart';
-import 'package:wlf_new_flutter_app/screens/paginationScreen/pagination_screen.dart';
-import 'package:wlf_new_flutter_app/screens/tabBarScreen/tabbar_screen.dart';
 
-import '../../commons/DrawerDl.dart';
-import '../googleMapScreen/location_detail_screen.dart';
-import '../selectImageFronCameraAndGallery/pick_image_camera_gallery.dart';
 import 'main_screen_bloc.dart';
 
 class MainScreen extends StatefulWidget {
@@ -27,14 +21,6 @@ class _MainScreenState extends State<MainScreen> {
     // TODO: implement didChangeDependencies
     super.didChangeDependencies();
   }
-
-  List<DrawerDl> lst = [
-    DrawerDl(TabBarScreen(), StringValues.tabBarDemo),
-    DrawerDl(PickImageCameraGallery(), StringValues.pickImageFromCameraAndGalleryDemo),
-    DrawerDl(PaginationScreen(), StringValues.paginationDemo),
-    DrawerDl(FirebaseCrudScreen(), StringValues.firebaseCrudDemo),
-    DrawerDl(LocationDetailScreen(), StringValues.googleMap),
-  ];
 
   @override
   Widget build(BuildContext context) {
@@ -108,19 +94,19 @@ class _MainScreenState extends State<MainScreen> {
               scrollDirection: Axis.vertical,
               physics: BouncingScrollPhysics(),
               shrinkWrap: true,
-              itemCount: lst.length,
+              itemCount: _bloc.lst.length,
               itemBuilder: (context, index) {
                 return InkWell(
                   onTap: () {
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => lst[index].screenName,
+                          builder: (context) => _bloc.lst[index].screenName,
                         ));
                   },
                   child: ListTile(
                     title: Text(
-                      "${lst[index].screenTitle}",
+                      _bloc.lst[index].screenTitle,
                       style: TextStyle(color: MyColors.mainColor, fontWeight: FontWeight.bold, fontSize: screenSizeRatio * 0.025),
                     ),
                     tileColor: Colors.white,
