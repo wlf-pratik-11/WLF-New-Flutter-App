@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:wlf_new_flutter_app/screens/googleMapScreen/saved_address_dl.dart';
 
 import '../../commons/common_functions.dart';
 import '../../commons/my_colors.dart';
@@ -9,13 +10,6 @@ import '../../commons/string_values.dart';
 import 'googleMapFindAndShowLocation/google_map_screen.dart';
 import 'location_detail_screen_bloc.dart';
 import 'location_detail_screen_dl.dart';
-import 'package:wlf_new_flutter_app/commons/common_functions.dart';
-import 'package:wlf_new_flutter_app/commons/my_colors.dart';
-import 'package:wlf_new_flutter_app/commons/string_values.dart';
-import 'package:wlf_new_flutter_app/screens/googleMapScreen/googleMapFindAndShowLocation/google_map_screen.dart';
-import 'package:wlf_new_flutter_app/screens/googleMapScreen/location_detail_screen_bloc.dart';
-import 'package:wlf_new_flutter_app/screens/googleMapScreen/location_detail_screen_dl.dart';
-import 'package:wlf_new_flutter_app/screens/googleMapScreen/saved_address_dl.dart';
 
 class LocationDetailScreen extends StatefulWidget {
   const LocationDetailScreen({super.key});
@@ -62,64 +56,40 @@ class _LocationDetailScreenState extends State<LocationDetailScreen> {
                 locationSearchField(),
 
                 // Address Suggestions
-                StreamBuilder<bool>(
-                    stream: _bloc.showSuggestionsController,
-                    builder: (context, showSuggestionsSnapshot) {
-                      if (showSuggestionsSnapshot.data == true) {
-                        return ListView.separated(
-                            physics: NeverScrollableScrollPhysics(),
-                            shrinkWrap: true,
-                            itemBuilder: (context, index) {
-                              return InkWell(
-                                  onTap: () async {
-                                    _bloc.saveAddressInTextFormField(
-                                      SavedAddressDl(
-                                          latLng: (await _bloc.getLatLngFromPlaceID(
-                                            suggestedAddress[index].placeId,
-                                          )),
-                                          address: suggestedAddress[index].description ?? ""),
-                                    );
-                                  },
-                                  child: ListTile(title: Text("${suggestedAddress[index].description}")));
-                            },
-                            separatorBuilder: (context, index) {
-                              return Divider();
-                            },
-                            itemCount: suggestedAddress.length < 5 ? suggestedAddress.length : 5);
-                      } else {
-                        return Container();
-                      }
-                    }),
+                showSuggestionsContainer(),
 
                 //Get Current Location
                 buttonContainer(
-                    value: StringValues.getCurrentLocation,
-                    onTap: () {
-                      _bloc.getCurrentLocation();
-                    },
-                    leadingIcon: Icon(
-                      Icons.my_location,
-                      color: MyColors.mainColor,
-                    )),
+                  value: StringValues.getCurrentLocation,
+                  onTap: () {
+                    _bloc.getCurrentLocation();
+                  },
+                  leadingIcon: Icon(
+                    Icons.my_location,
+                    color: MyColors.mainColor,
+                  ),
+                ),
 
                 //Set Location From Map
                 buttonContainer(
-                    value: StringValues.setLocationFromMap,
-                    onTap: () {
-                      navigatorPush(
-                          context,
-                          GoogleMapScreen(
-                            savedAddressDl: _bloc.savedAddressDl,
-                          ));
-                    },
-                    leadingIcon: Icon(
-                      Icons.map_outlined,
-                      color: MyColors.mainColor,
-                    ),
-                    trailingIcon: Icon(
-                      Icons.navigate_next,
-                      color: MyColors.mainColor,
-                    )),
+                  value: StringValues.setLocationFromMap,
+                  onTap: () {
+                    navigatorPush(
+                      context,
+                      GoogleMapScreen(
+                        savedAddressDl: _bloc.savedAddressDl,
+                      ),
+                    );
+                  },
+                  leadingIcon: Icon(
+                    Icons.map_outlined,
+                    color: MyColors.mainColor,
+                  ),
+                  trailingIcon: Icon(
+                    Icons.navigate_next,
+                    color: MyColors.mainColor,
+                  ),
+                ),
 
                 //Saved Location
                 savedLocation(),
@@ -198,7 +168,7 @@ class _LocationDetailScreenState extends State<LocationDetailScreen> {
       width: double.maxFinite,
       decoration: BoxDecoration(
           color: MyColors.lightBlue.withOpacity(0.5),
-          borderRadius: BorderRadiusDirectional.circular(screenSizeRatio*0.015),
+          borderRadius: BorderRadiusDirectional.circular(screenSizeRatio * 0.015),
           border: Border.all(color: MyColors.mainColor)),
       child: Column(
         children: [
@@ -225,27 +195,8 @@ class _LocationDetailScreenState extends State<LocationDetailScreen> {
               ],
             ),
           ),
-          Center(
-              child: Divider(
-            color: Colors.white,
-            thickness: 2,
-          )),
-          Padding(
-            padding: paddingSymmetric(horizontal: 0.03, vertical: 0.02),
-            child: StreamBuilder<String>(
-                stream: _bloc.confirmLocationController,
-                builder: (context, confirmLocationSnapshot) {
-                  return Text(
-                    maxLines: 3,
-                    overflow: TextOverflow.ellipsis,
-                    textDirection: TextDirection.ltr,
-                    "${confirmLocationSnapshot.data}",
-                    style: TextStyle(fontWeight: FontWeight.w500, color: Colors.black, fontSize: screenSizeRatio * 0.025),
-                  );
-                }),
-          ],
-        )
-      ],
+        ],
+      ),
     );
   }
 
@@ -272,21 +223,53 @@ class _LocationDetailScreenState extends State<LocationDetailScreen> {
                 fillColor: Colors.white,
                 prefixIconConstraints: BoxConstraints(maxHeight: screenSizeRatio * 0.05),
                 prefixIcon: Padding(
-                  padding:paddingSymmetric(horizontal: 0.025),
+                  padding: paddingSymmetric(horizontal: 0.025),
                   child: Icon(Icons.search),
                 ),
                 enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(screenSizeRatio*0.01),
+                  borderRadius: BorderRadius.circular(screenSizeRatio * 0.01),
                   borderSide: BorderSide(color: MyColors.mainColor),
                 ),
                 focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(screenSizeRatio*0.01),
+                  borderRadius: BorderRadius.circular(screenSizeRatio * 0.01),
                   borderSide: BorderSide(color: MyColors.darkBlue, width: 2),
                 ),
               ),
             );
           }),
     );
+  }
+
+  //show suggetions
+  showSuggestionsContainer() {
+    return StreamBuilder<bool>(
+        stream: _bloc.showSuggestionsController,
+        builder: (context, showSuggestionsSnapshot) {
+          if (showSuggestionsSnapshot.data == true) {
+            return ListView.separated(
+                physics: NeverScrollableScrollPhysics(),
+                shrinkWrap: true,
+                itemBuilder: (context, index) {
+                  return InkWell(
+                      onTap: () async {
+                        _bloc.saveAddressInTextFormField(
+                          SavedAddressDl(
+                              latLng: (await _bloc.getLatLngFromPlaceID(
+                                suggestedAddress[index].placeId,
+                              )),
+                              address: suggestedAddress[index].description ?? ""),
+                        );
+                      },
+                      child: ListTile(title: Text("${suggestedAddress[index].description}")));
+                },
+                separatorBuilder: (context, index) {
+                  return Divider();
+                },
+                itemCount: suggestedAddress.length < 5 ? suggestedAddress.length : 5);
+          } else {
+            return Container();
+          }
+        });
   }
 
   //Get Current Location and Set location from map button
@@ -301,7 +284,7 @@ class _LocationDetailScreenState extends State<LocationDetailScreen> {
         title: Text(value),
         leading: leadingIcon,
         shape: RoundedRectangleBorder(
-            borderRadius: BorderRadiusDirectional.circular(screenSizeRatio*0.01), side: BorderSide(color: MyColors.mainColor)),
+            borderRadius: BorderRadiusDirectional.circular(screenSizeRatio * 0.01), side: BorderSide(color: MyColors.mainColor)),
         trailing: trailingIcon,
       ),
     );
@@ -312,14 +295,14 @@ class _LocationDetailScreenState extends State<LocationDetailScreen> {
     return Container(
       margin: paddingSymmetric(horizontal: 0.01, vertical: 0.015),
       width: double.maxFinite,
-      decoration:
-          BoxDecoration(borderRadius: BorderRadiusDirectional.circular(screenSizeRatio*0.01), border: Border.all(color: MyColors.mainColor)),
+      decoration: BoxDecoration(
+          borderRadius: BorderRadiusDirectional.circular(screenSizeRatio * 0.01), border: Border.all(color: MyColors.mainColor)),
       child: Column(
         children: [
           ListTile(
             tileColor: MyColors.lightBlue.withOpacity(0.5),
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadiusDirectional.circular(screenSizeRatio*0.01),
+              borderRadius: BorderRadiusDirectional.circular(screenSizeRatio * 0.01),
             ),
             leading: Icon(
               Icons.home_outlined,
@@ -380,5 +363,4 @@ class _LocationDetailScreenState extends State<LocationDetailScreen> {
           fontColors: Colors.white),
     );
   }
-
 }

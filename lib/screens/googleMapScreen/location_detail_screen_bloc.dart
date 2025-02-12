@@ -14,12 +14,10 @@ import 'package:wlf_new_flutter_app/screens/googleMapScreen/saved_address_dl.dar
 import 'location_latlng_dl.dart';
 
 class LocationDetailScreenBloc {
-  LocationDetailScreenBloc() {
-    savedAddressDl = SavedAddressDl();
-  final BuildContext context;
   LocationDetailScreenBloc(this.context) {
-    getConfirmLocation();
+    savedAddressDl = SavedAddressDl();
   }
+  final BuildContext context;
 
   var dio = Dio();
   late SharedPreferences pref;

@@ -26,20 +26,4 @@ class SavedAddressDl {
     map['address'] = _address;
     return map;
   }
-  SavedAddressDl(this.latLng, this.address);
-
-  Map<String, dynamic> toJson() {
-    return {
-      "address": address,
-      "lat": latLng.latitude,
-      "lng": latLng.longitude,
-    };
-  }
-
-  factory SavedAddressDl.fromJson(Map<String, dynamic> json) {
-    return SavedAddressDl(
-      LatLng(json["lat"], json["lng"]),
-      json["address"],
-    );
-  }
 }
