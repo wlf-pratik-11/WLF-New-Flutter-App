@@ -15,7 +15,7 @@ import '../location_detail_screen_dl.dart';
 
 class GoogleMapScreenBloc {
   GoogleMapScreenBloc(this.context) {
-    getCurrentLocation();
+    // getCurrentLocation();
   }
   BuildContext context;
 

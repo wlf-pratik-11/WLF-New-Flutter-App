@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:wlf_new_flutter_app/commons/common_functions.dart';
+import 'package:wlf_new_flutter_app/screens/googleMapScreen/saved_address_dl.dart';
 
 import '../../../commons/my_colors.dart';
 import '../../../commons/string_values.dart';
@@ -8,7 +9,10 @@ import '../location_detail_screen_dl.dart';
 import 'google_map_screen_bloc.dart';
 
 class GoogleMapScreen extends StatefulWidget {
-  const GoogleMapScreen({super.key});
+  final SavedAddressDl? savedAddressDl;
+  final bool? fromSavedAddres;
+
+  const GoogleMapScreen({super.key, this.savedAddressDl, this.fromSavedAddres});
 
   @override
   State<GoogleMapScreen> createState() => _GoogleMapScreenState();
@@ -17,10 +21,13 @@ class GoogleMapScreen extends StatefulWidget {
 class _GoogleMapScreenState extends State<GoogleMapScreen> {
   late GoogleMapScreenBloc _bloc;
   List<Predictions> suggestedAddress = [];
+  late LatLng savedAddressLatlng;
 
   @override
   void didChangeDependencies() {
     _bloc = GoogleMapScreenBloc(context);
+    savedAddressLatlng = LatLng(widget.savedAddressDl?.latLng?[0], widget.savedAddressDl?.latLng?[1]);
+    _bloc.currentLocation = savedAddressLatlng;
     // TODO: implement didChangeDependencies
     super.didChangeDependencies();
   }
@@ -78,8 +85,10 @@ class _GoogleMapScreenState extends State<GoogleMapScreen> {
   }
 
   Widget googleMap() {
+    print("googleMap::::::::::::${LatLng(widget.savedAddressDl?.latLng?[0], widget.savedAddressDl?.latLng?[1])}");
     return GoogleMap(
-      initialCameraPosition: CameraPosition(target: _bloc.currentLocation, zoom: 15),
+      initialCameraPosition:
+          CameraPosition(target: widget.fromSavedAddres == true ? savedAddressLatlng : _bloc.currentLocation, zoom: 15),
       zoomControlsEnabled: false,
       onMapCreated: _bloc.onMapCreated,
       onCameraIdle: () {

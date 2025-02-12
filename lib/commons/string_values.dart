@@ -107,7 +107,7 @@ class StringValues {
 
   //Location Detail Screen
 
-  static String myLocation = "My Current Location";
+  static String myLocation = "My Location";
   static String getCurrentLocation = "Get Current Location";
   static String setLocationFromMap = "Set location from map";
   static String savedAddresses = "Saved addresses";

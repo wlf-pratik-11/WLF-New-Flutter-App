@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:wlf_new_flutter_app/commons/common_functions.dart';
@@ -6,6 +8,7 @@ import 'package:wlf_new_flutter_app/commons/string_values.dart';
 import 'package:wlf_new_flutter_app/screens/googleMapScreen/googleMapFindAndShowLocation/google_map_screen.dart';
 import 'package:wlf_new_flutter_app/screens/googleMapScreen/location_detail_screen_bloc.dart';
 import 'package:wlf_new_flutter_app/screens/googleMapScreen/location_detail_screen_dl.dart';
+import 'package:wlf_new_flutter_app/screens/googleMapScreen/saved_address_dl.dart';
 
 class LocationDetailScreen extends StatefulWidget {
   const LocationDetailScreen({super.key});
@@ -61,8 +64,14 @@ class _LocationDetailScreenState extends State<LocationDetailScreen> {
                             shrinkWrap: true,
                             itemBuilder: (context, index) {
                               return InkWell(
-                                  onTap: () {
-                                    _bloc.saveAddressInTextFormField(suggestedAddress[index].description);
+                                  onTap: () async {
+                                    _bloc.saveAddressInTextFormField(
+                                      SavedAddressDl(
+                                          latLng: (await _bloc.getLatLngFromPlaceID(
+                                            suggestedAddress[index].placeId,
+                                          )),
+                                          address: suggestedAddress[index].description ?? ""),
+                                    );
                                   },
                                   child: ListTile(title: Text("${suggestedAddress[index].description}")));
                             },
@@ -90,7 +99,11 @@ class _LocationDetailScreenState extends State<LocationDetailScreen> {
                 buttonContainer(
                     value: StringValues.setLocationFromMap,
                     onTap: () {
-                      navigatorPush(context, GoogleMapScreen());
+                      navigatorPush(
+                          context,
+                          GoogleMapScreen(
+                            savedAddressDl: _bloc.savedAddressDl,
+                          ));
                     },
                     leadingIcon: Icon(
                       Icons.map_outlined,
@@ -115,47 +128,90 @@ class _LocationDetailScreenState extends State<LocationDetailScreen> {
   }
 
   //My Current Location Container
+  // Widget currentLocationContainer() {
+  //   return Container(
+  //     margin: paddingSymmetric(horizontal: 0.01, vertical: 0.01),
+  //     width: double.maxFinite,
+  //     decoration: BoxDecoration(
+  //         color: MyColors.lightBlue.withOpacity(0.5),
+  //         borderRadius: BorderRadiusDirectional.circular(15),
+  //         border: Border.all(color: MyColors.mainColor)),
+  //     child: Column(
+  //       children: [
+  //         Padding(
+  //           padding: paddingSymmetric(horizontal: 0.02, vertical: 0.02),
+  //           child: Row(
+  //             children: [
+  //               Icon(
+  //                 Icons.location_on_outlined,
+  //                 color: Colors.black,
+  //                 size: screenSizeRatio * 0.05,
+  //               ),
+  //               Padding(
+  //                 padding: paddingSymmetric(horizontal: 0.018),
+  //                 child: Text(
+  //                   StringValues.myLocation,
+  //                   style: TextStyle(
+  //                     color: Colors.black,
+  //                     fontSize: screenSizeRatio * 0.028,
+  //                     fontWeight: FontWeight.w700,
+  //                   ),
+  //                 ),
+  //               )
+  //             ],
+  //           ),
+  //         ),
+  //         Center(
+  //             child: Divider(
+  //           color: Colors.white,
+  //           thickness: 2,
+  //         )),
+  //         Padding(
+  //           padding: paddingSymmetric(horizontal: 0.03, vertical: 0.02),
+  //           child: StreamBuilder<String>(
+  //               stream: _bloc.confirmLocationController,
+  //               builder: (context, confirmLocationSnapshot) {
+  //                 return Text(
+  //                   maxLines: 3,
+  //                   overflow: TextOverflow.ellipsis,
+  //                   textDirection: TextDirection.ltr,
+  //                   "${confirmLocationSnapshot.data}",
+  //                   style: TextStyle(fontWeight: FontWeight.w500, color: Colors.black, fontSize: screenSizeRatio * 0.025),
+  //                 );
+  //               }),
+  //         )
+  //       ],
+  //     ),
+  //   );
+  // }
+
   Widget currentLocationContainer() {
-    return Container(
-      margin: paddingSymmetric(horizontal: 0.01, vertical: 0.01),
-      width: double.maxFinite,
-      decoration: BoxDecoration(
-          color: MyColors.lightBlue.withOpacity(0.5),
-          borderRadius: BorderRadiusDirectional.circular(15),
-          border: Border.all(color: MyColors.mainColor)),
-      child: Column(
-        children: [
-          Padding(
-            padding: paddingSymmetric(horizontal: 0.02, vertical: 0.02),
-            child: Row(
-              children: [
-                Icon(
-                  Icons.location_on_outlined,
-                  color: Colors.black,
-                  size: screenSizeRatio * 0.05,
-                ),
-                Padding(
-                  padding: paddingSymmetric(horizontal: 0.018),
-                  child: Text(
-                    StringValues.myLocation,
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: screenSizeRatio * 0.028,
-                      fontWeight: FontWeight.w700,
-                    ),
-                  ),
-                )
-              ],
-            ),
+    return Row(
+      children: [
+        Container(
+          margin: paddingSymmetric(horizontal: 0.01, vertical: 0.02),
+          padding: paddingSymmetric(vertical: 0.01, horizontal: 0.01),
+          decoration: BoxDecoration(
+              color: MyColors.lightBlue.withOpacity(0.4),
+              borderRadius: BorderRadiusDirectional.circular(screenSizeRatio * 0.015),
+              shape: BoxShape.rectangle),
+          child: Icon(
+            Icons.location_on_outlined,
+            size: screenSizeRatio * 0.055,
           ),
-          Center(
-              child: Divider(
-            color: Colors.white,
-            thickness: 2,
-          )),
-          Padding(
-            padding: paddingSymmetric(horizontal: 0.03, vertical: 0.02),
-            child: StreamBuilder<String>(
+        ),
+        Wrap(
+          direction: Axis.vertical,
+          children: [
+            Text(
+              StringValues.myLocation,
+              style: TextStyle(
+                color: Colors.black.withOpacity(0.5),
+                fontSize: screenSizeRatio * 0.028,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            StreamBuilder<String>(
                 stream: _bloc.confirmLocationController,
                 builder: (context, confirmLocationSnapshot) {
                   return Text(
@@ -166,9 +222,9 @@ class _LocationDetailScreenState extends State<LocationDetailScreen> {
                     style: TextStyle(fontWeight: FontWeight.w500, color: Colors.black, fontSize: screenSizeRatio * 0.025),
                   );
                 }),
-          )
-        ],
-      ),
+          ],
+        )
+      ],
     );
   }
 
@@ -258,16 +314,28 @@ class _LocationDetailScreenState extends State<LocationDetailScreen> {
               ),
             ),
           ),
-          ListView.separated(
-              physics: NeverScrollableScrollPhysics(),
-              shrinkWrap: true,
-              itemBuilder: (context, index) {
-                return ListTile(title: Text("Address $index"));
-              },
-              separatorBuilder: (context, index) {
-                return Divider();
-              },
-              itemCount: 3)
+          StreamBuilder<List<String>>(
+              stream: _bloc.savedAddressListController,
+              builder: (context, savedAddressListSnapshot) {
+                return ListView.separated(
+                    physics: NeverScrollableScrollPhysics(),
+                    shrinkWrap: true,
+                    itemBuilder: (context, index) {
+                      return ListTile(
+                          onTap: () {
+                            _bloc.saveAddressInTextFormField(
+                              SavedAddressDl(
+                                  address: jsonDecode(savedAddressListSnapshot.data?[index] ?? "")["address"],
+                                  latLng: jsonDecode(savedAddressListSnapshot.data?[index] ?? "")["latLng"]),
+                            );
+                          },
+                          title: Text("${jsonDecode(savedAddressListSnapshot.data?[index] ?? "")["address"]}"));
+                    },
+                    separatorBuilder: (context, index) {
+                      return Divider();
+                    },
+                    itemCount: savedAddressListSnapshot.data?.length ?? 4);
+              })
         ],
       ),
     );
