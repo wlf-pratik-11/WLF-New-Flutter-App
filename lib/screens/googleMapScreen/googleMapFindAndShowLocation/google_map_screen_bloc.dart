@@ -10,17 +10,19 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uuid/uuid.dart';
 import 'package:wlf_new_flutter_app/commons/common_functions.dart';
 import 'package:wlf_new_flutter_app/screens/googleMapScreen/location_latlng_dl.dart';
+import 'package:wlf_new_flutter_app/screens/googleMapScreen/saved_address_dl.dart';
 
 import '../location_detail_screen_dl.dart';
 
 class GoogleMapScreenBloc {
-  GoogleMapScreenBloc(this.context) {
-    // getCurrentLocation();
+  GoogleMapScreenBloc(this.context, bool? fromSavedAddress) {
+    fromSavedAddress ?? getCurrentLocation();
   }
   final BuildContext context;
 
   var dio = Dio();
   var uuid = Uuid();
+  SavedAddressDl? savedAddressDl = SavedAddressDl();
   LatLng currentLocation = LatLng(22.2516503, 22.2516503);
   late SharedPreferences pref;
   String apiKey = "AIzaSyBGJ8mEq1C8Kn4mWY-ds6jDfsr7O8-JNGk";
@@ -63,6 +65,7 @@ class GoogleMapScreenBloc {
         String address =
             "${place.name},${place.thoroughfare},${place.subLocality}, ${place.locality}, ${place.postalCode}, ${place.administrativeArea}";
         searchLocationInputFieldController.text = address;
+        savedAddressDl = SavedAddressDl(latLng: [location.latitude, location.longitude, address]);
       }
     } catch (e) {
       debugPrint(e.toString());
@@ -98,6 +101,7 @@ class GoogleMapScreenBloc {
       final latLon = LocationLatLonDl.fromJson(data);
       currentLocation = LatLng(latLon.lat ?? 0, latLon.lng ?? 0);
       searchLocationInputFieldController.text = placeIDAddress ?? "";
+      savedAddressDl = SavedAddressDl(latLng: [currentLocation.latitude, currentLocation.longitude], address: placeIDAddress);
       mapController.animateCamera(
         CameraUpdate.newCameraPosition(
           CameraPosition(
@@ -128,10 +132,10 @@ class GoogleMapScreenBloc {
   }
 
   confirmLocation() async {
-    pref = await SharedPreferences.getInstance();
-    if (searchLocationInputFieldController.text.isNotEmpty) {
-      await pref.setString("confirmLocation", searchLocationInputFieldController.text);
-      if (context.mounted) Navigator.pop(context);
+    if (savedAddressDl?.address != null) {
+      if (context.mounted) {
+        Navigator.pop(context, savedAddressDl);
+      }
     }
   }
 
@@ -150,6 +154,7 @@ class GoogleMapScreenBloc {
             String address =
                 "${place.name},${place.thoroughfare},${place.subLocality}, ${place.locality}, ${place.postalCode}, ${place.administrativeArea}";
             debugPrint("Get Location On Camera Move:::::::$address");
+            savedAddressDl = SavedAddressDl(latLng: [value.latitude, value.longitude], address: address);
             searchLocationInputFieldController.text = address;
           }
         } catch (e) {

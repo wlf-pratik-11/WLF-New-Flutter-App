@@ -11,12 +11,13 @@ import 'package:wlf_new_flutter_app/commons/string_values.dart';
 import 'package:wlf_new_flutter_app/screens/googleMapScreen/location_detail_screen_dl.dart';
 import 'package:wlf_new_flutter_app/screens/googleMapScreen/saved_address_dl.dart';
 
+import '../../commons/common_functions.dart';
+import 'googleMapFindAndShowLocation/google_map_screen.dart';
 import 'location_latlng_dl.dart';
 
 class LocationDetailScreenBloc {
-  LocationDetailScreenBloc(this.context) {
-    savedAddressDl = SavedAddressDl();
-  }
+  LocationDetailScreenBloc(this.context);
+
   final BuildContext context;
 
   var dio = Dio();
@@ -54,6 +55,7 @@ class LocationDetailScreenBloc {
         pref = await SharedPreferences.getInstance();
         if (address.isNotEmpty) {
           savedAddressDl = SavedAddressDl(latLng: [location.latitude, location.longitude], address: address);
+          searchLocationInputFieldController.text = savedAddressDl.address.toString();
           await pref.setString("confirmLocation", address);
           getConfirmLocation();
         }
@@ -79,7 +81,6 @@ class LocationDetailScreenBloc {
   }
 
   void saveAddressInTextFormField(SavedAddressDl data) {
-    print("ListView.separated:::::::::::${data.address}:::::::${data.latLng}");
     searchLocationInputFieldController.text = data.address.toString();
     savedAddressDl = data;
     showSuggestionsController.sink.add(false);
@@ -90,13 +91,11 @@ class LocationDetailScreenBloc {
     confirmLocationController.sink.add(pref.getString("confirmLocation") ?? StringValues.locationNotAvailable);
     List<String> address = pref.getStringList("savedLocation") ?? [];
     savedAddressListController.sink.add(address.reversed.toList());
-    print("savedAddressListController.sink.add:::::::::::::::::::${pref.getStringList("savedLocation") ?? []}");
   }
 
   confirmLocation() async {
     pref = await SharedPreferences.getInstance();
     if (savedAddressDl.address != null && savedAddressDl.latLng != null) {
-      print("savedAddressDl.address != null && savedAddressDl.latLng != null:::::${savedAddressDl.address}");
       List<String> address = pref.getStringList("savedLocation") ?? [];
       if (address.length >= 4) {
         address.removeAt(0);
@@ -105,13 +104,22 @@ class LocationDetailScreenBloc {
         address.add(jsonEncode(savedAddressDl));
       }
       await pref.setStringList("savedLocation", address);
+      getConfirmLocation();
+      if (context.mounted) {
+        navigatorPush(
+          context,
+          GoogleMapScreen(
+            savedAddressDl: savedAddressDl.latLng != null ? savedAddressDl : null,
+            fromSavedAddress: true,
+          ),
+        );
+      }
+      ;
+      searchLocationInputFieldController.clear();
     } else {
-      print("Failed to save address::::::::::::::::::falied");
+      debugPrint("Failed to save");
     }
-    if (searchLocationInputFieldController.text.isNotEmpty) {
-      await pref.setString("confirmLocation", searchLocationInputFieldController.text);
-    }
-    getConfirmLocation();
+    if (savedAddressDl.address != null && savedAddressDl.latLng != null) {}
   }
 
   Future<bool> checkPermission() async {
@@ -141,5 +149,18 @@ class LocationDetailScreenBloc {
       debugPrint("Error");
       return [];
     }
+  }
+
+  Future<void> getLocationFromMap() async {
+    savedAddressDl = await navigatorPush(
+      context,
+      savedAddressDl.latLng != null
+          ? GoogleMapScreen(
+              savedAddressDl: savedAddressDl,
+            )
+          : GoogleMapScreen(),
+    );
+    print("savedAddressDl::::::::::::::::${savedAddressDl.address}");
+    searchLocationInputFieldController.text = savedAddressDl.address.toString();
   }
 }

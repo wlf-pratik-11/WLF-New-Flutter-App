@@ -10,9 +10,9 @@ import 'google_map_screen_bloc.dart';
 
 class GoogleMapScreen extends StatefulWidget {
   final SavedAddressDl? savedAddressDl;
-  final bool? fromSavedAddres;
+  final bool? fromSavedAddress;
 
-  const GoogleMapScreen({super.key, this.savedAddressDl, this.fromSavedAddres});
+  const GoogleMapScreen({super.key, this.savedAddressDl, this.fromSavedAddress});
 
   @override
   State<GoogleMapScreen> createState() => _GoogleMapScreenState();
@@ -25,8 +25,8 @@ class _GoogleMapScreenState extends State<GoogleMapScreen> {
 
   @override
   void didChangeDependencies() {
-    _bloc = GoogleMapScreenBloc(context);
-    savedAddressLatlng = LatLng(widget.savedAddressDl?.latLng?[0], widget.savedAddressDl?.latLng?[1]);
+    _bloc = GoogleMapScreenBloc(context, widget.fromSavedAddress);
+    savedAddressLatlng = LatLng(widget.savedAddressDl?.latLng?[0] ?? 23.2535, widget.savedAddressDl?.latLng?[1] ?? 22.365);
     _bloc.currentLocation = savedAddressLatlng;
     // TODO: implement didChangeDependencies
     super.didChangeDependencies();
@@ -85,10 +85,9 @@ class _GoogleMapScreenState extends State<GoogleMapScreen> {
   }
 
   Widget googleMap() {
-    print("googleMap::::::::::::${LatLng(widget.savedAddressDl?.latLng?[0], widget.savedAddressDl?.latLng?[1])}");
     return GoogleMap(
       initialCameraPosition:
-          CameraPosition(target: widget.fromSavedAddres == true ? savedAddressLatlng : _bloc.currentLocation, zoom: 15),
+          CameraPosition(target: widget.fromSavedAddress == true ? savedAddressLatlng : _bloc.currentLocation, zoom: 15),
       zoomControlsEnabled: false,
       onMapCreated: _bloc.onMapCreated,
       onCameraIdle: () {
@@ -121,11 +120,11 @@ class _GoogleMapScreenState extends State<GoogleMapScreen> {
                 child: Icon(Icons.search),
               ),
               enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(screenSizeRatio*0.01),
+                borderRadius: BorderRadius.circular(screenSizeRatio * 0.01),
                 borderSide: BorderSide(color: MyColors.mainColor),
               ),
               focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(screenSizeRatio*0.01),
+                borderRadius: BorderRadius.circular(screenSizeRatio * 0.01),
                 borderSide: BorderSide(color: MyColors.darkBlue, width: 2),
               ),
             ),
@@ -187,7 +186,7 @@ class _GoogleMapScreenState extends State<GoogleMapScreen> {
 
   Widget getCurrentLocationFloatingActionButton() {
     return FloatingActionButton.small(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadiusDirectional.circular(screenSizeRatio*0.01)),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadiusDirectional.circular(screenSizeRatio * 0.01)),
       backgroundColor: MyColors.lightBlue,
       onPressed: () {
         _bloc.getCurrentLocation();
