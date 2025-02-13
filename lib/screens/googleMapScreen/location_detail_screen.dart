@@ -88,7 +88,9 @@ class _LocationDetailScreenState extends State<LocationDetailScreen> {
 
                             //Set Location From Map
                             ListTile(
-                              onTap: () => _bloc.getLocationFromMap(),
+                              onTap: () {
+                                _bloc.getLocationFromMap();
+                              },
                               leading: Icon(
                                 Icons.map_outlined,
                                 color: MyColors.mainColor,

@@ -113,6 +113,7 @@ class _MainScreenState extends State<MainScreen> {
               itemBuilder: (context, index) {
                 return InkWell(
                   onTap: () {
+                    navigatorPop(context);
                     Navigator.push(
                         context,
                         MaterialPageRoute(

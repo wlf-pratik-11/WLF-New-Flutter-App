@@ -25,7 +25,7 @@ class _GoogleMapScreenState extends State<GoogleMapScreen> {
 
   @override
   void didChangeDependencies() {
-    _bloc = GoogleMapScreenBloc(context, widget.fromSavedAddress);
+    _bloc = GoogleMapScreenBloc(context, widget.fromSavedAddress,widget.savedAddressDl);
     savedAddressLatlng = LatLng(widget.savedAddressDl?.latLng?[0] ?? 23.2535, widget.savedAddressDl?.latLng?[1] ?? 22.365);
     _bloc.currentLocation = savedAddressLatlng;
     // TODO: implement didChangeDependencies

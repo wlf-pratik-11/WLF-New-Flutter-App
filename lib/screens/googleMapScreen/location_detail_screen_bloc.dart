@@ -16,32 +16,27 @@ import 'googleMapFindAndShowLocation/google_map_screen.dart';
 import 'location_latlng_dl.dart';
 
 class LocationDetailScreenBloc {
-  LocationDetailScreenBloc(this.context);
-
   final BuildContext context;
 
+  LocationDetailScreenBloc(this.context){
+    getLastLocationPref();
+  }
+
+  var uuid = Uuid();
   var dio = Dio();
   late SharedPreferences pref;
-
   late SavedAddressDl savedAddressDl;
   List<String> savedAddressList = [];
+  String apiKey = "AIzaSyBGJ8mEq1C8Kn4mWY-ds6jDfsr7O8-JNGk";
 
   final searchLocationInputFieldController = TextEditingController();
 
   final showSuggestionsController = BehaviorSubject<bool>.seeded(false);
   final suggestionsListController = BehaviorSubject<List<Predictions>>();
-  final confirmLocationController = BehaviorSubject<String>();
   final savedAddressListController = BehaviorSubject<List<String>>();
 
-  var uuid = Uuid();
-  String apiKey = "AIzaSyBGJ8mEq1C8Kn4mWY-ds6jDfsr7O8-JNGk";
-
-  getLatLonFromAddress(String value) async {
-    getSuggestions(value);
-  }
-
   Future<void> getCurrentLocation() async {
-    await checkPermission();
+    if (!await checkPermission()) return;
     final location = await Geolocator.getCurrentPosition();
     try {
       List<Placemark> placemark = await placemarkFromCoordinates(
@@ -52,11 +47,11 @@ class LocationDetailScreenBloc {
         Placemark place = placemark.first;
         String address =
             "${place.name},${place.thoroughfare},${place.subLocality}, ${place.locality}, ${place.postalCode}, ${place.administrativeArea}";
-        pref = await SharedPreferences.getInstance();
         if (address.isNotEmpty) {
-          savedAddressDl = SavedAddressDl(latLng: [location.latitude, location.longitude], address: address);
-          searchLocationInputFieldController.text = savedAddressDl.address.toString();
-          await pref.setString("confirmLocation", address);
+          savedAddressDl = SavedAddressDl(
+              latLng: [location.latitude, location.longitude],
+              address: address);
+          searchLocationInputFieldController.text = address;
           getConfirmLocation();
         }
       }
@@ -67,8 +62,10 @@ class LocationDetailScreenBloc {
 
   Future<List<Predictions>> getSuggestions(String input) async {
     final sessionToken = uuid.v4();
-    String baseURL = 'https://maps.googleapis.com/maps/api/place/autocomplete/json';
-    String request = '$baseURL?input=$input&key=$apiKey&sessiontoken=$sessionToken';
+    String baseURL =
+        'https://maps.googleapis.com/maps/api/place/autocomplete/json';
+    String request =
+        '$baseURL?input=$input&key=$apiKey&sessiontoken=$sessionToken';
     var response = await dio.get(request);
     if (response.statusCode == 200) {
       final data = LocationDetailScreenDl.fromJson(response.data);
@@ -88,7 +85,6 @@ class LocationDetailScreenBloc {
 
   getConfirmLocation() async {
     pref = await SharedPreferences.getInstance();
-    confirmLocationController.sink.add(pref.getString("confirmLocation") ?? StringValues.locationNotAvailable);
     List<String> address = pref.getStringList("savedLocation") ?? [];
     savedAddressListController.sink.add(address.reversed.toList());
   }
@@ -104,12 +100,14 @@ class LocationDetailScreenBloc {
         address.add(jsonEncode(savedAddressDl));
       }
       await pref.setStringList("savedLocation", address);
+      await pref.setString("confirmLocation", jsonEncode(savedAddressDl));
       getConfirmLocation();
       if (context.mounted) {
         navigatorPush(
           context,
           GoogleMapScreen(
-            savedAddressDl: savedAddressDl.latLng != null ? savedAddressDl : null,
+            savedAddressDl:
+                savedAddressDl,
             fromSavedAddress: true,
           ),
         );
@@ -119,7 +117,6 @@ class LocationDetailScreenBloc {
     } else {
       debugPrint("Failed to save");
     }
-    if (savedAddressDl.address != null && savedAddressDl.latLng != null) {}
   }
 
   Future<bool> checkPermission() async {
@@ -139,7 +136,8 @@ class LocationDetailScreenBloc {
   }
 
   Future<List<double>> getLatLngFromPlaceID(String? placeID) async {
-    String url = "https://maps.googleapis.com/maps/api/place/details/json?placeid=$placeID&key=$apiKey";
+    String url =
+        "https://maps.googleapis.com/maps/api/place/details/json?placeid=$placeID&key=$apiKey";
     var response = await dio.get(url);
     if (response.statusCode == 200) {
       var data = response.data["result"]["geometry"]["location"];
@@ -152,7 +150,7 @@ class LocationDetailScreenBloc {
   }
 
   Future<void> getLocationFromMap() async {
-    savedAddressDl = await navigatorPush(
+     navigatorPush(
       context,
       savedAddressDl.latLng != null
           ? GoogleMapScreen(
@@ -160,7 +158,11 @@ class LocationDetailScreenBloc {
             )
           : GoogleMapScreen(),
     );
-    print("savedAddressDl::::::::::::::::${savedAddressDl.address}");
     searchLocationInputFieldController.text = savedAddressDl.address.toString();
+  }
+
+  getLastLocationPref() async{
+    pref = await SharedPreferences.getInstance();
+    searchLocationInputFieldController.text = jsonDecode(pref.getString("confirmLocation")??"")["address"]??"";
   }
 }

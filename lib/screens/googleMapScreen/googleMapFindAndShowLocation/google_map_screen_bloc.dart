@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
@@ -15,14 +16,17 @@ import 'package:wlf_new_flutter_app/screens/googleMapScreen/saved_address_dl.dar
 import '../location_detail_screen_dl.dart';
 
 class GoogleMapScreenBloc {
-  GoogleMapScreenBloc(this.context, bool? fromSavedAddress) {
+  GoogleMapScreenBloc(this.context, bool? fromSavedAddress,SavedAddressDl? savedAddressDl) {
     fromSavedAddress ?? getCurrentLocation();
+    getCurrentLocation();
+    this.savedAddressDl = savedAddressDl;
+    searchLocationInputFieldController.text = jsonDecode(pref.getString("confirmLocation")??"")["address"]??"";
   }
   final BuildContext context;
 
   var dio = Dio();
   var uuid = Uuid();
-  SavedAddressDl? savedAddressDl = SavedAddressDl();
+  SavedAddressDl? savedAddressDl;
   LatLng currentLocation = LatLng(22.2516503, 22.2516503);
   late SharedPreferences pref;
   String apiKey = "AIzaSyBGJ8mEq1C8Kn4mWY-ds6jDfsr7O8-JNGk";
@@ -134,7 +138,9 @@ class GoogleMapScreenBloc {
   confirmLocation() async {
     if (savedAddressDl?.address != null) {
       if (context.mounted) {
-        Navigator.pop(context, savedAddressDl);
+        print("Comfirm address from search field:::${savedAddressDl?.address}");
+        Navigator.pop(context);
+        navigatorPop(context);
       }
     }
   }
