@@ -17,7 +17,7 @@ class GoogleMapScreenBloc {
   GoogleMapScreenBloc(this.context) {
     getCurrentLocation();
   }
-  BuildContext context;
+  final BuildContext context;
 
   var dio = Dio();
   var uuid = Uuid();
@@ -65,7 +65,7 @@ class GoogleMapScreenBloc {
         searchLocationInputFieldController.text = address;
       }
     } catch (e) {
-      print(e.toString());
+      debugPrint(e.toString());
     }
   }
 
@@ -127,7 +127,7 @@ class GoogleMapScreenBloc {
     return true;
   }
 
-  confirmLocation(BuildContext context) async {
+  confirmLocation() async {
     pref = await SharedPreferences.getInstance();
     if (searchLocationInputFieldController.text.isNotEmpty) {
       await pref.setString("confirmLocation", searchLocationInputFieldController.text);
@@ -149,11 +149,11 @@ class GoogleMapScreenBloc {
             Placemark place = placemark.first;
             String address =
                 "${place.name},${place.thoroughfare},${place.subLocality}, ${place.locality}, ${place.postalCode}, ${place.administrativeArea}";
-            print("Get Location On Camera Move:::::::${address}");
+            debugPrint("Get Location On Camera Move:::::::$address");
             searchLocationInputFieldController.text = address;
           }
         } catch (e) {
-          print(e.toString());
+          debugPrint(e.toString());
         }
       },
     );

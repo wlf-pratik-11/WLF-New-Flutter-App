@@ -22,7 +22,7 @@ class _PaginationScreenState extends State<PaginationScreen> {
 
   @override
   void didChangeDependencies() {
-    _bloc = PaginationScreenBloc();
+    _bloc = PaginationScreenBloc(context);
     // TODO: implement didChangeDependencies
     super.didChangeDependencies();
   }
@@ -48,7 +48,7 @@ class _PaginationScreenState extends State<PaginationScreen> {
           },
           itemBuilder: (context, item, index) {
             return Padding(
-              padding: EdgeInsets.symmetric(vertical: screenSizeRatio * 0.01, horizontal: screenSizeRatio * 0.02),
+              padding: paddingSymmetric(vertical: 0.01, horizontal: 0.02),
               child: _expansionTile(item),
             );
           },
@@ -61,14 +61,15 @@ class _PaginationScreenState extends State<PaginationScreen> {
       itemCount: 10,
       itemBuilder: (context, index) {
         return Padding(
-          padding: EdgeInsets.symmetric(vertical: screenSizeRatio * 0.01, horizontal: screenSizeRatio * 0.02),
+          padding: paddingSymmetric(
+              vertical:0.01, horizontal: 0.02),
           child: Shimmer.fromColors(
             baseColor: Colors.white,
             highlightColor: Colors.white10,
             child: ListTile(
               minTileHeight: screenSizeRatio * 0.15,
               tileColor: MyColors.listTileColors,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadiusDirectional.circular(10)),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadiusDirectional.circular(screenSizeRatio*0.01)),
               leading: Container(
                 decoration: BoxDecoration(borderRadius: BorderRadiusDirectional.circular(100), color: Colors.white),
                 height: screenSizeRatio * 0.07,
@@ -78,14 +79,14 @@ class _PaginationScreenState extends State<PaginationScreen> {
                 height: screenSizeRatio * 0.03,
                 decoration: BoxDecoration(
                   color: Colors.white,
-                  borderRadius: BorderRadiusDirectional.circular(5),
+                  borderRadius: BorderRadiusDirectional.circular(screenSizeRatio*0.005),
                 ),
               ),
               subtitle: Container(
                 height: screenSizeRatio * 0.02,
                 decoration: BoxDecoration(
                   color: Colors.white,
-                  borderRadius: BorderRadiusDirectional.circular(5),
+                  borderRadius: BorderRadiusDirectional.circular(screenSizeRatio*0.005),
                 ),
               ),
               trailing: Column(
@@ -94,7 +95,7 @@ class _PaginationScreenState extends State<PaginationScreen> {
                   Container(
                     decoration: BoxDecoration(
                       color: Colors.white,
-                      borderRadius: BorderRadiusDirectional.circular(5),
+                      borderRadius: BorderRadiusDirectional.circular(screenSizeRatio*0.005),
                     ),
                     height: screenSizeRatio * 0.05,
                     width: screenSizeRatio * 0.12,
@@ -102,7 +103,7 @@ class _PaginationScreenState extends State<PaginationScreen> {
                   Container(
                     decoration: BoxDecoration(
                       color: Colors.white,
-                      borderRadius: BorderRadiusDirectional.circular(5),
+                      borderRadius: BorderRadiusDirectional.circular(screenSizeRatio*0.005),
                     ),
                     height: screenSizeRatio * 0.02,
                     width: screenSizeRatio * 0.05,
@@ -126,8 +127,8 @@ class _PaginationScreenState extends State<PaginationScreen> {
             initiallyExpanded: isExpandedSnapshot.data ?? false,
             minTileHeight: screenSizeRatio * 0.15,
             collapsedBackgroundColor: MyColors.listTileColors,
-            collapsedShape: RoundedRectangleBorder(borderRadius: BorderRadiusDirectional.circular(5)),
-            shape: RoundedRectangleBorder(borderRadius: BorderRadiusDirectional.circular(10)),
+            collapsedShape: RoundedRectangleBorder(borderRadius: BorderRadiusDirectional.circular(screenSizeRatio*0.005)),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadiusDirectional.circular(screenSizeRatio*0.01)),
             leading: _leading(item),
             title: _title(item),
             subtitle: _subTitle(item),
@@ -205,7 +206,7 @@ class _PaginationScreenState extends State<PaginationScreen> {
       children: [
         Container(
           decoration: BoxDecoration(
-            borderRadius: BorderRadiusDirectional.circular(5),
+            borderRadius: BorderRadiusDirectional.circular(screenSizeRatio*0.005),
             color: item.gender == "Male" ? Colors.green.shade100 : Colors.red.shade100,
           ),
           height: screenSizeRatio * 0.05,

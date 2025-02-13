@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:wlf_new_flutter_app/commons/common_functions.dart';
-import 'package:wlf_new_flutter_app/commons/my_colors.dart';
-import 'package:wlf_new_flutter_app/commons/string_values.dart';
-import 'package:wlf_new_flutter_app/screens/googleMapScreen/googleMapFindAndShowLocation/google_map_screen.dart';
-import 'package:wlf_new_flutter_app/screens/googleMapScreen/location_detail_screen_bloc.dart';
-import 'package:wlf_new_flutter_app/screens/googleMapScreen/location_detail_screen_dl.dart';
+
+import '../../commons/common_functions.dart';
+import '../../commons/my_colors.dart';
+import '../../commons/string_values.dart';
+import 'googleMapFindAndShowLocation/google_map_screen.dart';
+import 'location_detail_screen_bloc.dart';
+import 'location_detail_screen_dl.dart';
 
 class LocationDetailScreen extends StatefulWidget {
   const LocationDetailScreen({super.key});
@@ -20,7 +21,7 @@ class _LocationDetailScreenState extends State<LocationDetailScreen> {
 
   @override
   void didChangeDependencies() {
-    _bloc = LocationDetailScreenBloc();
+    _bloc = LocationDetailScreenBloc(context);
     _bloc.getConfirmLocation();
     // TODO: implement didChangeDependencies
     super.didChangeDependencies();
@@ -121,7 +122,7 @@ class _LocationDetailScreenState extends State<LocationDetailScreen> {
       width: double.maxFinite,
       decoration: BoxDecoration(
           color: MyColors.lightBlue.withOpacity(0.5),
-          borderRadius: BorderRadiusDirectional.circular(15),
+          borderRadius: BorderRadiusDirectional.circular(screenSizeRatio*0.015),
           border: Border.all(color: MyColors.mainColor)),
       child: Column(
         children: [
@@ -195,15 +196,15 @@ class _LocationDetailScreenState extends State<LocationDetailScreen> {
                 fillColor: Colors.white,
                 prefixIconConstraints: BoxConstraints(maxHeight: screenSizeRatio * 0.05),
                 prefixIcon: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: screenSizeRatio * 0.025),
+                  padding:paddingSymmetric(horizontal: 0.025),
                   child: Icon(Icons.search),
                 ),
                 enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10),
+                  borderRadius: BorderRadius.circular(screenSizeRatio*0.01),
                   borderSide: BorderSide(color: MyColors.mainColor),
                 ),
                 focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10),
+                  borderRadius: BorderRadius.circular(screenSizeRatio*0.01),
                   borderSide: BorderSide(color: MyColors.darkBlue, width: 2),
                 ),
               ),
@@ -224,25 +225,25 @@ class _LocationDetailScreenState extends State<LocationDetailScreen> {
         title: Text(value),
         leading: leadingIcon,
         shape: RoundedRectangleBorder(
-            borderRadius: BorderRadiusDirectional.circular(10), side: BorderSide(color: MyColors.mainColor)),
+            borderRadius: BorderRadiusDirectional.circular(screenSizeRatio*0.01), side: BorderSide(color: MyColors.mainColor)),
         trailing: trailingIcon,
       ),
     );
   }
 
-  //Saved Addresses List
+  // Saved Addresses List
   Widget savedLocation() {
     return Container(
       margin: paddingSymmetric(horizontal: 0.01, vertical: 0.015),
       width: double.maxFinite,
       decoration:
-          BoxDecoration(borderRadius: BorderRadiusDirectional.circular(10), border: Border.all(color: MyColors.mainColor)),
+          BoxDecoration(borderRadius: BorderRadiusDirectional.circular(screenSizeRatio*0.01), border: Border.all(color: MyColors.mainColor)),
       child: Column(
         children: [
           ListTile(
             tileColor: MyColors.lightBlue.withOpacity(0.5),
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadiusDirectional.circular(10),
+              borderRadius: BorderRadiusDirectional.circular(screenSizeRatio*0.01),
             ),
             leading: Icon(
               Icons.home_outlined,
@@ -273,7 +274,8 @@ class _LocationDetailScreenState extends State<LocationDetailScreen> {
     );
   }
 
-  //Confirm Location Button
+  // Confirm Location Button
+
   Widget confirmLocationButton() {
     return Container(
       width: double.maxFinite,
@@ -285,10 +287,10 @@ class _LocationDetailScreenState extends State<LocationDetailScreen> {
           onPressed: () {
             _bloc.confirmLocation();
             FocusScope.of(context).unfocus();
-            // return null;
           },
           bagColor: MyColors.mainColor,
           fontColors: Colors.white),
     );
   }
+
 }

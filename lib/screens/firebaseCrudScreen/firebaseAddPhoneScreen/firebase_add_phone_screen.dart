@@ -6,7 +6,6 @@ import 'package:wlf_new_flutter_app/screens/firebaseCrudScreen/firebaseAddPhoneS
 
 class FirebaseAddPhoneScreen extends StatefulWidget {
   final itemKey;
-
   const FirebaseAddPhoneScreen({this.itemKey, super.key});
 
   @override
@@ -18,7 +17,7 @@ class _FirebaseAddPhoneScreenState extends State<FirebaseAddPhoneScreen> {
 
   @override
   void didChangeDependencies() {
-    _bloc = FirebaseAddPhoneScreenBloc();
+    _bloc = FirebaseAddPhoneScreenBloc(context);
     widget.itemKey != null ? _bloc.getData(widget.itemKey) : null;
     // TODO: implement didChangeDependencies
     super.didChangeDependencies();
@@ -198,7 +197,7 @@ class _FirebaseAddPhoneScreenState extends State<FirebaseAddPhoneScreen> {
               decoration: BoxDecoration(
                   color: snapshot.data != null ? (snapshot.data!.contains(item) ? MyColors.lightBlue : null) : null,
                   border: Border.all(color: MyColors.lightBlue, width: 3),
-                  borderRadius: BorderRadiusDirectional.circular(10)),
+                  borderRadius: BorderRadiusDirectional.circular(screenSizeRatio*0.01)),
               padding: paddingSymmetric(horizontal: 0.02, vertical: 0.015),
               margin: paddingSymmetric(vertical: 0.005),
               child: Text(
@@ -348,9 +347,8 @@ class _FirebaseAddPhoneScreenState extends State<FirebaseAddPhoneScreen> {
         fontColors: MyColors.darkBlue,
         onPressed: () {
           if (_bloc.validateForm()) {
-            _bloc.saveData(context, itemKey: widget.itemKey);
+            _bloc.saveData(itemKey: widget.itemKey);
           }
-          return null;
         },
       ),
     );

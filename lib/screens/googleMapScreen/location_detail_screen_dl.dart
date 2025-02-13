@@ -1,5 +1,3 @@
-/// predictions : [{"description":"GUJRAT HARDWARE, Shital Park Road, nr. Mochi nagar, Mochi Nagar, Puneet Nagar, Hall, Rajkot, Gujarat, India","matched_substrings":[{"length":6,"offset":0},{"length":11,"offset":17}],"place_id":"ChIJ7yFU3zTJWTkRL5FHAx2GpE4","reference":"ChIJ7yFU3zTJWTkRL5FHAx2GpE4","structured_formatting":{"main_text":"GUJRAT HARDWARE","main_text_matched_substrings":[{"length":6,"offset":0}],"secondary_text":"Shital Park Road, nr. Mochi nagar, Mochi Nagar, Puneet Nagar, Hall, Rajkot, Gujarat, India","secondary_text_matched_substrings":[{"length":11,"offset":0}]},"terms":[{"offset":0,"value":"GUJRAT HARDWARE"},{"offset":17,"value":"Shital Park Road"},{"offset":35,"value":"nr. Mochi nagar"},{"offset":52,"value":"Mochi Nagar"},{"offset":65,"value":"Puneet Nagar"},{"offset":79,"value":"Hall"},{"offset":85,"value":"Rajkot"},{"offset":93,"value":"Gujarat"},{"offset":102,"value":"India"}],"types":["store","establishment","point_of_interest","hardware_store"]}]
-/// status : "OK"
 
 class LocationDetailScreenDl {
   LocationDetailScreenDl({
@@ -34,14 +32,6 @@ class LocationDetailScreenDl {
   }
 
 }
-
-/// description : "GUJRAT HARDWARE, Shital Park Road, nr. Mochi nagar, Mochi Nagar, Puneet Nagar, Hall, Rajkot, Gujarat, India"
-/// matched_substrings : [{"length":6,"offset":0},{"length":11,"offset":17}]
-/// place_id : "ChIJ7yFU3zTJWTkRL5FHAx2GpE4"
-/// reference : "ChIJ7yFU3zTJWTkRL5FHAx2GpE4"
-/// structured_formatting : {"main_text":"GUJRAT HARDWARE","main_text_matched_substrings":[{"length":6,"offset":0}],"secondary_text":"Shital Park Road, nr. Mochi nagar, Mochi Nagar, Puneet Nagar, Hall, Rajkot, Gujarat, India","secondary_text_matched_substrings":[{"length":11,"offset":0}]}
-/// terms : [{"offset":0,"value":"GUJRAT HARDWARE"},{"offset":17,"value":"Shital Park Road"},{"offset":35,"value":"nr. Mochi nagar"},{"offset":52,"value":"Mochi Nagar"},{"offset":65,"value":"Puneet Nagar"},{"offset":79,"value":"Hall"},{"offset":85,"value":"Rajkot"},{"offset":93,"value":"Gujarat"},{"offset":102,"value":"India"}]
-/// types : ["store","establishment","point_of_interest","hardware_store"]
 
 class Predictions {
   Predictions({
@@ -116,8 +106,6 @@ class Predictions {
 
 }
 
-/// offset : 0
-/// value : "GUJRAT HARDWARE"
 
 class Terms {
   Terms({
@@ -146,10 +134,6 @@ class Terms {
 
 }
 
-/// main_text : "GUJRAT HARDWARE"
-/// main_text_matched_substrings : [{"length":6,"offset":0}]
-/// secondary_text : "Shital Park Road, nr. Mochi nagar, Mochi Nagar, Puneet Nagar, Hall, Rajkot, Gujarat, India"
-/// secondary_text_matched_substrings : [{"length":11,"offset":0}]
 
 class StructuredFormatting {
   StructuredFormatting({
@@ -204,9 +188,6 @@ class StructuredFormatting {
 
 }
 
-/// length : 11
-/// offset : 0
-
 class SecondaryTextMatchedSubstrings {
   SecondaryTextMatchedSubstrings({
       int? length, 
@@ -234,8 +215,7 @@ class SecondaryTextMatchedSubstrings {
 
 }
 
-/// length : 6
-/// offset : 0
+
 
 class MainTextMatchedSubstrings {
   MainTextMatchedSubstrings({

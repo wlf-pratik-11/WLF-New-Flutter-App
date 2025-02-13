@@ -24,7 +24,7 @@ class _FirebaseCrudScreenState extends State<FirebaseCrudScreen> {
 
   @override
   void didChangeDependencies() {
-    _bloc = FirebaseCrudScreenBloc();
+    _bloc = FirebaseCrudScreenBloc(context);
     screenData = FirebaseCrudScreenDl();
     // TODO: implement didChangeDependencies
     super.didChangeDependencies();
@@ -72,7 +72,7 @@ class _FirebaseCrudScreenState extends State<FirebaseCrudScreen> {
           key: UniqueKey(),
           direction: DismissDirection.startToEnd,
           confirmDismiss: (direction) async {
-            return await _bloc.deleteItemFromList(snapshot.key ?? "", context);
+            return await _bloc.deleteItemFromList(snapshot.key ?? "");
           },
           child: InkWell(
             child: cardForFirebaseAnimatedList(snapshot: snapshot, index: index, screenData: screenData),
@@ -92,7 +92,7 @@ class _FirebaseCrudScreenState extends State<FirebaseCrudScreen> {
     return Card(
       color: Colors.white,
       elevation: 5,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadiusDirectional.circular(5)),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadiusDirectional.circular(screenSizeRatio*0.01)),
       margin: paddingSymmetric(vertical: 0.01, horizontal: 0.015),
       child: Padding(
         padding: EdgeInsets.all(screenSizeRatio * 0.02),
@@ -169,7 +169,7 @@ class _FirebaseCrudScreenState extends State<FirebaseCrudScreen> {
                           ? CupertinoColors.systemGreen.withOpacity(0.2)
                           : CupertinoColors.destructiveRed.withOpacity(0.2),
                       shape: BoxShape.rectangle,
-                      borderRadius: BorderRadiusDirectional.circular(5)),
+                      borderRadius: BorderRadiusDirectional.circular(screenSizeRatio*0.01)),
                   child: Padding(
                     padding: paddingSymmetric(vertical: 0.008, horizontal: 0.009),
                     child: Text(
@@ -238,13 +238,15 @@ class _FirebaseCrudScreenState extends State<FirebaseCrudScreen> {
           ),
           Padding(
             padding: paddingSymmetric(vertical: 0.01),
-            child: commonElevatedIconButton(
+            child: commonElevatedButton(
               title: StringValues.addToCart,
               leading: Image.asset(
                 "assets/images/addToCart.png",
                 width: screenSizeRatio * 0.035,
               ),
-              onPressed: () {},
+              onPressed: () {
+                return null;
+              },
             ),
           )
         ],
@@ -284,7 +286,7 @@ class _FirebaseCrudScreenState extends State<FirebaseCrudScreen> {
       margin: paddingSymmetric(horizontal: 0.008, vertical: 0.005),
       padding: paddingSymmetric(vertical: 0.006, horizontal: 0.012),
       decoration:
-          BoxDecoration(color: Colors.black54, shape: BoxShape.rectangle, borderRadius: BorderRadiusDirectional.circular(5)),
+          BoxDecoration(color: Colors.black54, shape: BoxShape.rectangle, borderRadius: BorderRadiusDirectional.circular(screenSizeRatio*0.01)),
       child: Text(
         varieant,
         style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),

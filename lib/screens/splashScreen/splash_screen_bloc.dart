@@ -5,13 +5,14 @@ import '../googleSignInScreen/google_signin_screen.dart';
 import '../mainScreen/main_screen.dart';
 
 class SplashScreenBloc {
-  SplashScreenBloc(BuildContext context) {
-    navigateToHome(context);
+  final BuildContext context;
+  SplashScreenBloc(this.context){
+    navigateToHome();
   }
 
   final _user = FirebaseAuth.instance.currentUser;
 
-  Future<void> navigateToHome(BuildContext context) async {
+  Future<void> navigateToHome() async {
     await Future.delayed(Duration(milliseconds: 1000));
     if (context.mounted) {
       Navigator.pushReplacement(context, MaterialPageRoute(

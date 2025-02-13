@@ -2,7 +2,8 @@ class StringValues {
   //Drawer Titles
 
   static String tabBarDemo = "Tab bar Demo";
-  static String pickImageFromCameraAndGalleryDemo = "Pick Image From Camera and Gallery Demo";
+  static String pickImageFromCameraAndGalleryDemo =
+      "Pick Image From Camera and Gallery Demo";
   static String paginationDemo = "Pagination Demo";
   static String firebaseCrudDemo = "Firebase Crud Demo";
 
@@ -44,7 +45,8 @@ class StringValues {
 
   //Pick Image From Camera and Gallery
 
-  static String pickImageFromCameraAndGallery = "Pick Image From Camera and Gallery";
+  static String pickImageFromCameraAndGallery =
+      "Pick Image From Camera and Gallery";
   static String imageNotSelected = "Image not Selected";
   static String pickImage = "Pick Image";
   static String camera = "Camera";
@@ -52,7 +54,7 @@ class StringValues {
 
   //Splash Screen
 
-  static String WLF = "WLF";
+  static String wlf = "WLF";
   static String flutterNewApp = "Flutter New App";
 
   //Tabbar Screen

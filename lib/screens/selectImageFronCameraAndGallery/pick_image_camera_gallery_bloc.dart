@@ -6,6 +6,8 @@ import 'package:rxdart/rxdart.dart';
 import 'package:wlf_new_flutter_app/commons/my_colors.dart';
 
 class PickImageCameraGalleryBloc {
+  final BuildContext context;
+  PickImageCameraGalleryBloc(this.context);
 
   final imageController = BehaviorSubject<String>();
 

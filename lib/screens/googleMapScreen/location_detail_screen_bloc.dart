@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:geocoding/geocoding.dart';
@@ -10,7 +12,8 @@ import 'package:wlf_new_flutter_app/screens/googleMapScreen/location_detail_scre
 import 'package:wlf_new_flutter_app/screens/googleMapScreen/saved_address_dl.dart';
 
 class LocationDetailScreenBloc {
-  LocationDetailScreenBloc() {
+  final BuildContext context;
+  LocationDetailScreenBloc(this.context) {
     getConfirmLocation();
   }
 
@@ -50,7 +53,7 @@ class LocationDetailScreenBloc {
         }
       }
     } catch (e) {
-      print(e.toString());
+      debugPrint(e.toString());
     }
   }
 

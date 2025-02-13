@@ -1,14 +1,3 @@
-/// imgURL : "https://rukminim2.flixcart.com/image/850/1000/xif0q/mobile/1/x/3/-original-imah8pdnxdwzazyy.jpeg?q=90&crop=false"
-/// offerPrice : "25076"
-/// offerPercentage : "56"
-/// offerDescription : "variantOfPhoneSection"
-/// price : "56990"
-/// inStock : true
-/// inOffer : true
-/// storageVariant : ["64 GB","1 TB"]
-/// phoneName : "Redmi 9 pro max"
-/// offerTitle : "10 Fab"
-
 class FirebaseCrudScreenDl {
   FirebaseCrudScreenDl({
       String? imgURL, 

@@ -4,7 +4,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:wlf_new_flutter_app/commons/string_values.dart';
 import 'package:wlf_new_flutter_app/screens/googleSignInScreen/google_signin_screen.dart';
 
-import '../../commons/DrawerDl.dart';
+import '../../commons/drawer_dl.dart';
 import '../../commons/common_functions.dart';
 import '../../commons/my_colors.dart';
 import '../firebaseCrudScreen/firebase_crud_screen.dart';
@@ -14,6 +14,10 @@ import '../selectImageFronCameraAndGallery/pick_image_camera_gallery.dart';
 import '../tabBarScreen/tabbar_screen.dart';
 
 class MainScreenBloc {
+  final BuildContext context;
+  MainScreenBloc(this.context){
+
+  }
   final user = FirebaseAuth.instance.currentUser;
 
   List<DrawerDl> lst = [
@@ -24,26 +28,26 @@ class MainScreenBloc {
     DrawerDl(LocationDetailScreen(), StringValues.googleMap),
   ];
 
-  Future<void> signOut(BuildContext context) async {
+  Future<void> signOut() async {
     showDialog(
       context: context,
       builder: (context) {
         return Dialog(
-          shape: RoundedRectangleBorder(borderRadius: BorderRadiusDirectional.circular(10)),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadiusDirectional.circular(screenSizeRatio*0.01)),
           backgroundColor: MyColors.mainColor,
           child: Column(
             mainAxisSize: MainAxisSize.min,
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               Padding(
-                padding: EdgeInsets.symmetric(vertical: screenSizeRatio * 0.025),
+                padding: paddingSymmetric(vertical: 0.025),
                 child: Text(
                   StringValues.areYouWantToLogout,
                   style: TextStyle(color: Colors.white, fontSize: diologeFontSize, fontWeight: FontWeight.bold),
                 ),
               ),
               Padding(
-                padding: EdgeInsets.symmetric(vertical: screenSizeRatio * 0.02, horizontal: screenSizeRatio * 0.04),
+                padding: paddingSymmetric(vertical: 0.02, horizontal: 0.04),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
@@ -55,7 +59,7 @@ class MainScreenBloc {
                         )),
                     ElevatedButton(
                         style: ElevatedButton.styleFrom(
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadiusDirectional.circular(10)),
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadiusDirectional.circular(screenSizeRatio*0.01)),
                             backgroundColor: MyColors.buttonFontColor),
                         onPressed: () async {
                           try {

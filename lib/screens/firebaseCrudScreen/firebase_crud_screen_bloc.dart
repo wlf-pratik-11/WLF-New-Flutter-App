@@ -7,7 +7,8 @@ import '../../commons/my_colors.dart';
 import '../../commons/string_values.dart';
 
 class FirebaseCrudScreenBloc {
-  FirebaseCrudScreenBloc() {
+  final BuildContext context;
+  FirebaseCrudScreenBloc(this.context) {
     getFirebaseRef();
   }
 
@@ -18,26 +19,26 @@ class FirebaseCrudScreenBloc {
     return ref;
   }
 
-  deleteItemFromList(String key, BuildContext context) async {
+  deleteItemFromList(String key) async {
     await showDialog(
       context: context,
       builder: (context) {
         return Dialog(
-          shape: RoundedRectangleBorder(borderRadius: BorderRadiusDirectional.circular(10)),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadiusDirectional.circular(screenSizeRatio*0.01)),
           backgroundColor: MyColors.mainColor,
           child: Column(
             mainAxisSize: MainAxisSize.min,
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               Padding(
-                padding: EdgeInsets.symmetric(vertical: screenSizeRatio * 0.025),
+                padding: paddingSymmetric(vertical: 0.025),
                 child: Text(
                   StringValues.areYouWantToDelete,
                   style: TextStyle(color: Colors.white, fontSize: diologeFontSize, fontWeight: FontWeight.bold),
                 ),
               ),
               Padding(
-                padding: EdgeInsets.symmetric(vertical: screenSizeRatio * 0.02, horizontal: screenSizeRatio * 0.04),
+                padding: paddingSymmetric(vertical: 0.02, horizontal:  0.04),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
@@ -51,10 +52,10 @@ class FirebaseCrudScreenBloc {
                         )),
                     ElevatedButton(
                         style: ElevatedButton.styleFrom(
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadiusDirectional.circular(10)),
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadiusDirectional.circular(screenSizeRatio*0.01)),
                             backgroundColor: MyColors.buttonFontColor),
                         onPressed: () async {
-                          return deleteItemFromFirebase(key, context);
+                          return deleteItemFromFirebase(key);
                         },
                         child: Text(
                           StringValues.delete,
@@ -70,7 +71,7 @@ class FirebaseCrudScreenBloc {
     );
   }
 
-  deleteItemFromFirebase(String itemKey, BuildContext context) async {
+  deleteItemFromFirebase(String itemKey) async {
     await ref.child(itemKey).remove().then((value) {
       var snakBar = SnackBar(
         content: Text(
