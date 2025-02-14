@@ -3,9 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:wlf_new_flutter_app/commons/string_values.dart';
 import 'package:wlf_new_flutter_app/screens/googleSignInScreen/google_signin_screen.dart';
+import 'package:wlf_new_flutter_app/screens/routeOnGoogleMap/select_route_screen.dart';
 
-import '../../commons/drawer_dl.dart';
 import '../../commons/common_functions.dart';
+import '../../commons/drawer_dl.dart';
 import '../../commons/my_colors.dart';
 import '../firebaseCrudScreen/firebase_crud_screen.dart';
 import '../googleMapScreen/location_detail_screen.dart';
@@ -15,9 +16,7 @@ import '../tabBarScreen/tabbar_screen.dart';
 
 class MainScreenBloc {
   final BuildContext context;
-  MainScreenBloc(this.context){
-
-  }
+  MainScreenBloc(this.context) {}
   final user = FirebaseAuth.instance.currentUser;
 
   List<DrawerDl> lst = [
@@ -26,6 +25,7 @@ class MainScreenBloc {
     DrawerDl(PaginationScreen(), StringValues.paginationDemo),
     DrawerDl(FirebaseCrudScreen(), StringValues.firebaseCrudDemo),
     DrawerDl(LocationDetailScreen(), StringValues.googleMap),
+    DrawerDl(SelectRouteScreen(), StringValues.selectRoute),
   ];
 
   Future<void> signOut() async {
@@ -33,7 +33,7 @@ class MainScreenBloc {
       context: context,
       builder: (context) {
         return Dialog(
-          shape: RoundedRectangleBorder(borderRadius: BorderRadiusDirectional.circular(screenSizeRatio*0.01)),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadiusDirectional.circular(screenSizeRatio * 0.01)),
           backgroundColor: MyColors.mainColor,
           child: Column(
             mainAxisSize: MainAxisSize.min,
@@ -59,7 +59,7 @@ class MainScreenBloc {
                         )),
                     ElevatedButton(
                         style: ElevatedButton.styleFrom(
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadiusDirectional.circular(screenSizeRatio*0.01)),
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadiusDirectional.circular(screenSizeRatio * 0.01)),
                             backgroundColor: MyColors.buttonFontColor),
                         onPressed: () async {
                           try {

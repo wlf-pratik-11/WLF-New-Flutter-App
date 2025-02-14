@@ -18,8 +18,7 @@ var diologeButtonFontSize = screenSizeRatio * 0.025;
 var snakBarFontSize = screenSizeRatio * 0.025;
 var elevatedButtonFontSize = screenSizeRatio * 0.037;
 
-AppBar commonAppbar(String title,
-    {bool? centerTitle, List<Widget>? actions, TabBar? bottom}) {
+AppBar commonAppbar(String title, {bool? centerTitle, List<Widget>? actions, TabBar? bottom}) {
   return AppBar(
     actions: actions,
     iconTheme: IconThemeData(color: Colors.white),
@@ -27,10 +26,7 @@ AppBar commonAppbar(String title,
     centerTitle: centerTitle ?? false,
     title: Text(
       title,
-      style: TextStyle(
-          fontSize: screenSizeRatio * 0.036,
-          fontWeight: FontWeight.bold,
-          color: Colors.white),
+      style: TextStyle(fontSize: screenSizeRatio * 0.036, fontWeight: FontWeight.bold, color: Colors.white),
     ),
     bottom: bottom,
   );
@@ -48,15 +44,12 @@ Widget commonElevatedButton(
           onPressed: onPressed,
           style: ElevatedButton.styleFrom(
               backgroundColor: bagColor ?? MyColors.mainColor,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadiusDirectional.circular(
-                      borderRadius ?? screenSizeRatio * 0.01))),
+              shape:
+                  RoundedRectangleBorder(borderRadius: BorderRadiusDirectional.circular(borderRadius ?? screenSizeRatio * 0.01))),
           child: Text(
             title,
             style: TextStyle(
-                fontWeight: FontWeight.bold,
-                color: fontColors ?? MyColors.buttonFontColor,
-                fontSize: elevatedButtonFontSize),
+                fontWeight: FontWeight.bold, color: fontColors ?? MyColors.buttonFontColor, fontSize: elevatedButtonFontSize),
           ))
       : SizedBox(
           width: double.maxFinite,
@@ -67,15 +60,10 @@ Widget commonElevatedButton(
               },
               style: ElevatedButton.styleFrom(
                   backgroundColor: MyColors.lightBlue,
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadiusDirectional.circular(
-                          screenSizeRatio * 0.01))),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadiusDirectional.circular(screenSizeRatio * 0.01))),
               label: Text(
                 title,
-                style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: MyColors.darkBlue,
-                    fontSize: screenSizeRatio * 0.03),
+                style: TextStyle(fontWeight: FontWeight.bold, color: MyColors.darkBlue, fontSize: screenSizeRatio * 0.03),
               )),
         );
   ;
@@ -83,10 +71,7 @@ Widget commonElevatedButton(
 
 TextStyle paginationListViewItemTextStyle() {
   return TextStyle(
-      color: Colors.white,
-      fontSize: screenSizeRatio * 0.025,
-      fontWeight: FontWeight.bold,
-      overflow: TextOverflow.ellipsis);
+      color: Colors.white, fontSize: screenSizeRatio * 0.025, fontWeight: FontWeight.bold, overflow: TextOverflow.ellipsis);
 }
 
 Widget textPlaceHolderShimmerEffect() {
@@ -95,10 +80,7 @@ Widget textPlaceHolderShimmerEffect() {
       highlightColor: Colors.white10,
       enabled: true,
       child: Container(
-        decoration: BoxDecoration(
-            borderRadius:
-                BorderRadiusDirectional.circular(screenSizeRatio * 0.01),
-            color: Colors.white10),
+        decoration: BoxDecoration(borderRadius: BorderRadiusDirectional.circular(screenSizeRatio * 0.01), color: Colors.white10),
         width: screenSizeRatio * 0.25,
         height: screenSizeRatio * 0.02,
       ));
@@ -110,43 +92,45 @@ Widget inputField(String fieldName, TextEditingController controller,
     Widget? prefix,
     bool? isPassword,
     Function()? onPressed,
-    Function()? onChanged,
+    Function(String? value)? onChanged,
     int? maxLength,
     bool? isNumber,
     bool? readOnly,
+    Function()? onEditingComplete,
+    Function()? onTapOutside,
     Function()? onTap}) {
   return Padding(
     padding: paddingSymmetric(horizontal: 0.04, vertical: 0.02),
     child: TextFormField(
-      onChanged: (value) => onChanged?.call(),
+      onChanged: (value) => onChanged?.call(value),
+      onEditingComplete: () => onEditingComplete?.call(),
+      onTapOutside: (event) => onTapOutside?.call(),
       onTap: () => onTap?.call(),
       readOnly: readOnly ?? false,
       obscureText: isPassword ?? false,
       controller: controller,
-      keyboardType:
-          isNumber ?? false ? TextInputType.number : TextInputType.text,
+      keyboardType: isNumber ?? false ? TextInputType.number : TextInputType.text,
       maxLength: isNumber ?? false ? maxLength : null,
       decoration: InputDecoration(
         prefixIcon: prefix,
         label: Text(
           fieldName,
-          style:
-              TextStyle(color: Colors.black, fontSize: screenSizeRatio * 0.03),
+          style: TextStyle(color: Colors.black, fontSize: screenSizeRatio * 0.03),
         ),
         enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(screenSizeRatio * 0.01),
+          borderRadius: BorderRadius.circular(screenSizeRatio * 0.03),
           borderSide: BorderSide(color: Colors.black26, width: 0.5),
         ),
         focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(screenSizeRatio * 0.01),
+          borderRadius: BorderRadius.circular(screenSizeRatio * 0.03),
           borderSide: BorderSide(color: Colors.black, width: 1),
         ),
         focusedErrorBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(screenSizeRatio * 0.01),
+          borderRadius: BorderRadius.circular(screenSizeRatio * 0.03),
           borderSide: BorderSide(color: Colors.black, width: 1),
         ),
         errorBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(screenSizeRatio * 0.01),
+          borderRadius: BorderRadius.circular(screenSizeRatio * 0.03),
           borderSide: BorderSide(color: Colors.black, width: 1),
         ),
         errorStyle: TextStyle(color: Colors.red),
@@ -184,6 +168,5 @@ navigatorPop(BuildContext context) {
 
 paddingSymmetric({double? vertical, double? horizontal}) {
   return EdgeInsetsDirectional.symmetric(
-      vertical: screenSizeRatio * (vertical ?? 0),
-      horizontal: screenSizeRatio * (horizontal ?? 0));
+      vertical: screenSizeRatio * (vertical ?? 0), horizontal: screenSizeRatio * (horizontal ?? 0));
 }

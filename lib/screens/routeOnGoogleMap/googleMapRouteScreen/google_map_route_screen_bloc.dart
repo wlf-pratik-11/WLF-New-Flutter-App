@@ -1,34 +1,26 @@
-import 'dart:async';
-import 'dart:convert';
-
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:rxdart/rxdart.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uuid/uuid.dart';
-import 'package:wlf_new_flutter_app/commons/common_functions.dart';
-import 'package:wlf_new_flutter_app/screens/googleMapScreen/location_latlng_dl.dart';
-import 'package:wlf_new_flutter_app/screens/googleMapScreen/saved_address_dl.dart';
 
-import '../location_detail_screen_dl.dart';
+import '../../../commons/common_functions.dart';
+import '../../googleMapScreen/location_detail_screen_dl.dart';
+import '../../googleMapScreen/location_latlng_dl.dart';
+import '../../googleMapScreen/saved_address_dl.dart';
 
-class GoogleMapScreenBloc {
-  GoogleMapScreenBloc(this.context, bool? fromSavedAddress, SavedAddressDl? savedAddressDl) {
-    fromSavedAddress ?? getCurrentLocation();
-    getCurrentLocation();
-    this.savedAddressDl = savedAddressDl;
-    searchLocationInputFieldController.text = jsonDecode(pref.getString("confirmLocation") ?? "")["address"] ?? "";
-  }
+class GoogleMapRouteScreenBloc {
   final BuildContext context;
+  GoogleMapRouteScreenBloc(this.context, bool? fromSavedAddress, this.savedAddressDl) {
+    fromSavedAddress ?? getCurrentLocation();
+  }
 
   var dio = Dio();
   var uuid = Uuid();
-  SavedAddressDl? savedAddressDl = SavedAddressDl();
+  SavedAddressDl? savedAddressDl;
   LatLng currentLocation = LatLng(22.2516503, 22.2516503);
-  late SharedPreferences pref;
   String apiKey = "AIzaSyBGJ8mEq1C8Kn4mWY-ds6jDfsr7O8-JNGk";
 
   final searchLocationInputFieldController = TextEditingController();
@@ -139,8 +131,7 @@ class GoogleMapScreenBloc {
     if (savedAddressDl?.address != null) {
       if (context.mounted) {
         print("Comfirm address from search field:::${savedAddressDl?.address}");
-        Navigator.pop(context);
-        navigatorPop(context);
+        Navigator.pop(context, savedAddressDl);
       }
     }
   }

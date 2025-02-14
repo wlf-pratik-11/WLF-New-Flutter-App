@@ -67,7 +67,7 @@ class _FirebaseAddPhoneScreenState extends State<FirebaseAddPhoneScreen> {
                               )),
                           inputField(StringValues.price, _bloc.priceController,
                               maxLength: 6,
-                              onChanged: () {
+                              onChanged: (value) {
                                 return _bloc.offerPrizeCalculation();
                               },
                               prefix: Icon(
@@ -197,7 +197,7 @@ class _FirebaseAddPhoneScreenState extends State<FirebaseAddPhoneScreen> {
               decoration: BoxDecoration(
                   color: snapshot.data != null ? (snapshot.data!.contains(item) ? MyColors.lightBlue : null) : null,
                   border: Border.all(color: MyColors.lightBlue, width: 3),
-                  borderRadius: BorderRadiusDirectional.circular(screenSizeRatio*0.01)),
+                  borderRadius: BorderRadiusDirectional.circular(screenSizeRatio * 0.01)),
               padding: paddingSymmetric(horizontal: 0.02, vertical: 0.015),
               margin: paddingSymmetric(vertical: 0.005),
               child: Text(
@@ -266,7 +266,7 @@ class _FirebaseAddPhoneScreenState extends State<FirebaseAddPhoneScreen> {
       ),
       inputField(
           StringValues.offerPercentage,
-          onChanged: () {
+          onChanged: (value) {
             return _bloc.offerPrizeCalculation();
           },
           maxLength: 2,

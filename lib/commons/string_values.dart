@@ -2,8 +2,7 @@ class StringValues {
   //Drawer Titles
 
   static String tabBarDemo = "Tab bar Demo";
-  static String pickImageFromCameraAndGalleryDemo =
-      "Pick Image From Camera and Gallery Demo";
+  static String pickImageFromCameraAndGalleryDemo = "Pick Image From Camera and Gallery Demo";
   static String paginationDemo = "Pagination Demo";
   static String firebaseCrudDemo = "Firebase Crud Demo";
 
@@ -45,8 +44,7 @@ class StringValues {
 
   //Pick Image From Camera and Gallery
 
-  static String pickImageFromCameraAndGallery =
-      "Pick Image From Camera and Gallery";
+  static String pickImageFromCameraAndGallery = "Pick Image From Camera and Gallery";
   static String imageNotSelected = "Image not Selected";
   static String pickImage = "Pick Image";
   static String camera = "Camera";
@@ -116,4 +114,8 @@ class StringValues {
   static String searchLocation = "Search Location";
   static String confirmLocation = "Confirm Location";
   static String locationNotAvailable = "Location Not Available";
+
+  //Select Route Screen
+
+  static String selectRoute = "Select Route";
 }
